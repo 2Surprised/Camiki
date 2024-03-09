@@ -28,12 +28,13 @@ module.exports = {
         if (subcommandGroup === 'color') {
             if (subcommand === 'view') {
                 
-                // Stopped here, use JIMP?
+                interaction.reply({ content: "Sorry, this command is still a work in progress. Check back soon!", ephemeral: true })
 
             } else if (subcommand === 'change') {
 
-                interaction.member.roles.color.setColor(`${interaction.options.get('HEX color')}`)
+                interaction.member.roles.color.setColor(`${interaction.options.getString('color')}`)
                 .catch(console.error);
+                interaction.reply({ content: "Your role color has been successfully changed!" })
 
             };
         };

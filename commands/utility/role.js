@@ -13,12 +13,12 @@ module.exports = {
             .setDescription('View your current role color.'))
         .addSubcommand(command => command
             .setName('change')
-            .setDescription('Change your current role color.'))
-            .addStringOption(options => options
-                .setName('HEX color')
-                .setDescription('The HEX color of your new role color')
+            .setDescription('Change your current role color.')
+            .addStringOption(option => option
+                .setName('color')
+                .setDescription('The HEX value of your new role color')
                 .setRequired(true)
-            )
+            ))
     ),
 
     async execute(interaction) {

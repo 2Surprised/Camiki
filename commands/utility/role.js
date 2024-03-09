@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require('discord.js')
+const { SlashCommandBuilder } = require('discord.js');
 
 module.exports = {
 
@@ -14,6 +14,11 @@ module.exports = {
         .addSubcommand(command => command
             .setName('change')
             .setDescription('Change your current role color.'))
+            .addStringOption(options => options
+                .setName('HEX color')
+                .setDescription('The HEX color of your new role color')
+                .setRequired(true)
+            )
     ),
 
     async execute(interaction) {
@@ -22,11 +27,16 @@ module.exports = {
 
         if (subcommandGroup === 'color') {
             if (subcommand === 'view') {
-                // Stopped here
+                
+                // Stopped here, use JIMP?
+
             } else if (subcommand === 'change') {
 
-            }
-        }
+                interaction.member.roles.color.setColor(`${interaction.options.get('HEX color')}`)
+                .catch(console.error);
+
+            };
+        };
     }
 
-}
+};

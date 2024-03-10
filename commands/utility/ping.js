@@ -30,4 +30,5 @@ module.exports = {
             .setDescription(`${sent.createdTimestamp - interaction.createdTimestamp} ms`)
         ]});
     },
+    
 };

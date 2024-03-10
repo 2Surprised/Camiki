@@ -57,6 +57,21 @@ module.exports = {
                 // // interaction.reply({ embeds: [replyEmbed], files: [{ attachment: roleColorImageObject.bitmap.data, name: 'roleColorImage'}] });
                 // interaction.reply({ content: "Test", files: [{ attachment: roleColorImageObject }] })
 
+                async function imageCreate() {
+                    new Jimp(256, 256, "#FF00FF", (error, image) => {
+                        if (error) throw error;
+                        image.getBuffer(Jimp.MIME_PNG, (error, buffer) => {
+                            if (error) throw error;
+                            return buffer;
+                        });
+                    });
+                }
+
+                console.log(imageCreate())
+                console.log(Buffer.isBuffer(imageCreate()))
+                
+                // interaction.reply({ content: "Test", files: [{ attachment: imageBuffer, name: "image" }] });
+
             } else if (subcommand === 'change') {
 
                 interaction.member.roles.color.setColor(`${interaction.options.getString('color')}`)

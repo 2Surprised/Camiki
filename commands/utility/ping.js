@@ -27,7 +27,7 @@ module.exports = {
     async execute(interaction) {
         const sent = await interaction.reply({ embeds: [replyMessage], fetchReply: true });
         interaction.editReply({ embeds: [replyMessageEdited
-            .setDescription(`Ping: ${sent.createdTimestamp - interaction.createdTimestamp} ms`)
+            .setDescription(`${sent.createdTimestamp - interaction.createdTimestamp} ms`)
         ]});
     },
 };

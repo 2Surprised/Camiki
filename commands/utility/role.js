@@ -43,7 +43,7 @@ module.exports = {
         if (subcommandGroup === 'color') {
             if (subcommand === 'view') {
 
-                new Jimp(150, 150, decimalToHexColor(interaction.member.roles.color.color), (error, image) => {
+                new Jimp(200, 200, decimalToHexColor(interaction.member.roles.color.color), (error, image) => {
                     if (error) throw error;
                     image.getBuffer(Jimp.MIME_PNG, (error, imageFile) => {
 
@@ -54,7 +54,7 @@ module.exports = {
                         const replyEmbed = embed
                         .setTitle('Current role color')
                         .setDescription(`HEX color value: \`${decimalToHexColor(interaction.member.roles.color.color)}\``)
-                        .setImage('attachment://image.png')
+                        .setThumbnail('attachment://image.png')
                         interaction.reply({ embeds: [replyEmbed], files: [roleColorImage] })
 
                     });

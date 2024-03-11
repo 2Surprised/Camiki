@@ -53,7 +53,7 @@ module.exports = {
                         .setName('image.png')
                         const replyEmbed = embed
                         .setTitle('Current role color')
-                        .setDescription(`HEX color value: ${decimalToHexColor(interaction.member.roles.color.color)}`)
+                        .setDescription(`HEX color value: \`${decimalToHexColor(interaction.member.roles.color.color)}\``)
                         .setImage('attachment://image.png')
                         interaction.reply({ embeds: [replyEmbed], files: [roleColorImage] })
 

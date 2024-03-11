@@ -43,34 +43,22 @@ module.exports = {
         if (subcommandGroup === 'color') {
             if (subcommand === 'view') {
 
-                // let roleColorImageObject = new Jimp(256, 256, decimalToHexColor(interaction.member.roles.color.color), (error, image) => {
-                //     if (error) throw error;
-                //     roleColorImageObject = image.getBufferAsync(Jimp.MIME_PNG)
-                //     // .then(result => roleColorImageObject = result);
-                // });
-                // const roleColorImage = new AttachmentBuilder()
-                // .setFile(roleColorImageObject, 'roleColorImage')
-                // const replyEmbed = embed
-                // .setTitle('Current role color')
-                // .setImage('attachment://roleColorImage');
-                
-                // // interaction.reply({ embeds: [replyEmbed], files: [{ attachment: roleColorImageObject.bitmap.data, name: 'roleColorImage'}] });
-                // interaction.reply({ content: "Test", files: [{ attachment: roleColorImageObject }] })
+                new Jimp(150, 150, decimalToHexColor(interaction.member.roles.color.color), (error, image) => {
+                    if (error) throw error;
+                    image.getBuffer(Jimp.MIME_PNG, (error, imageFile) => {
 
-                async function imageCreate() {
-                    new Jimp(256, 256, "#FF00FF", (error, image) => {
                         if (error) throw error;
-                        image.getBuffer(Jimp.MIME_PNG, (error, buffer) => {
-                            if (error) throw error;
-                            return buffer;
-                        });
-                    });
-                }
+                        const roleColorImage = new AttachmentBuilder()
+                        .setFile(imageFile)
+                        .setName('image.png')
+                        const replyEmbed = embed
+                        .setTitle('Current role color')
+                        .setDescription(`HEX color value: ${decimalToHexColor(interaction.member.roles.color.color)}`)
+                        .setImage('attachment://image.png')
+                        interaction.reply({ embeds: [replyEmbed], files: [roleColorImage] })
 
-                console.log(imageCreate())
-                console.log(Buffer.isBuffer(imageCreate()))
-                
-                // interaction.reply({ content: "Test", files: [{ attachment: imageBuffer, name: "image" }] });
+                    });
+                });
 
             } else if (subcommand === 'change') {
 

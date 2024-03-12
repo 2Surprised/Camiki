@@ -18,9 +18,12 @@ module.exports = {
 
     async execute(interaction) {
 
-        const response = fetch(`https://api.nasa.gov/planetary/apod?api_key=${nasaAPIkey}`)
+        fetch(`https://api.nasa.gov/planetary/apod?api_key=${nasaAPIkey}`)
             .then(response => {
-                if (!response.ok) throw new Error('Invalid response.');
+                if (!response.ok) {
+                    console.log(response)
+                    throw new Error('Invalid response.')
+                };
                 return response.json();
             })
             .then(data => {
@@ -33,10 +36,13 @@ module.exports = {
 
                     interaction.reply({ embeds: [apodEmbed] })
 
+                } else {
+                    interaction.reply({ content: 'Sorry, the media format of this APOD is not supported. Please contact <@871039576247005185> immediately.'})
                 }
             })
             .catch(error => {
-                console.error('Error:', error)
+                console.error(error)
+                interaction.reply({ content: 'Sorry, the API could not be reached.', ephemeral: true })
             });
 
     }

@@ -8,6 +8,10 @@ module.exports = {
         .addSubcommand(command => command
             .setName('info')
             .setDescription('Displays information about a guild member.')
+            .addUserOption(user => user
+                .setName('user')
+                .setDescription('The user whose information you want to retrieve.')
+            )
         ),
 
     async execute(interaction) {
@@ -16,7 +20,9 @@ module.exports = {
         
         if (subcommand === 'info') {
 
-            interaction.member.user.fetch(true)
+            const targetUser = interaction.options.getUser('user') ?? interaction.member.user
+
+            targetUser.fetch(true)
                 .then(user => {
 
                     const embed = new EmbedBuilder()
@@ -30,11 +36,11 @@ module.exports = {
                     .setDescription(`${user} is a member of **${interaction.guild.name}**!`)
                     .setThumbnail(user.avatarURL())
                     .setImage(user.bannerURL())
-                    .addFields(
-                        { name: 'Account Creation', value: user.createdAt, inline: true },
-                        { name: 'Server Join', value: interaction.member.joinedAt, inline: true },
-                        { name: 'User ID', value: user.id, inline: true }
-                    )
+                    // .addFields(
+                    //     { name: 'Account Creation', value: user.createdAt, inline: true },
+                    //     { name: 'Server Join', value: interaction.member.joinedAt, inline: true },
+                    //     { name: 'User ID', value: user.id, inline: true }
+                    // )
 
                     interaction.reply({ embeds: [embed] })
 

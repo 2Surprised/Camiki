@@ -25,7 +25,7 @@ module.exports = {
             .setDescription('Change your current role color.')
             .addStringOption(option => option
                 .setName('color')
-                .setDescription('The HEX value of your new role color')
+                .setDescription('The HEX value of your new role color.')
                 .setRequired(true)
             ))
     ),

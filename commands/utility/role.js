@@ -1,12 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, AttachmentBuilder } = require('discord.js');
 const Jimp = require('jimp');
 
-function decimalToHexColor(decimal) {
-    var hex = Number(decimal).toString(16);
-    hex = "#000000".substring(0, 7 - hex.length) + hex;
-    return hex;
-}
-
 const embed = new EmbedBuilder()
     .setAuthor({
         name : 'Camiki',
@@ -43,7 +37,7 @@ module.exports = {
         if (subcommandGroup === 'color') {
             if (subcommand === 'view') {
 
-                new Jimp(200, 200, decimalToHexColor(interaction.member.roles.color.color), (error, image) => {
+                new Jimp(200, 200, interaction.member.displayHexColor, (error, image) => {
                     if (error) throw error;
                     image.getBuffer(Jimp.MIME_PNG, (error, imageFile) => {
 
@@ -53,7 +47,7 @@ module.exports = {
                         .setName('image.png')
                         const replyEmbed = embed
                         .setTitle('Current role color')
-                        .setDescription(`HEX color value: \`${decimalToHexColor(interaction.member.roles.color.color)}\``)
+                        .setDescription(`HEX color value: \`${interaction.member.displayHexColor}\``)
                         .setThumbnail('attachment://image.png')
                         interaction.reply({ embeds: [replyEmbed], files: [roleColorImage] })
 

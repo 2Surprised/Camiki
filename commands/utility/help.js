@@ -7,7 +7,8 @@ const helpEmbed = new EmbedBuilder()
     })
     .setColor('#ff57f6')
     .addFields(
-        { name: 'Utility commands', value: '`/help`, `/ping`, `/role color view`, `/role color change`' }
+        { name: 'Utility commands', value: '`/help`, `/ping`, `/member info`, `/role color view`, `/role color change`' },
+        { name: 'Fun commands', value: '`/apod`' }
     )
     .setFooter({ text: 'Have a nice day!' });
 

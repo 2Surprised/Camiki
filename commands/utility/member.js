@@ -20,7 +20,9 @@ module.exports = {
         
         if (subcommand === 'info') {
 
-            const targetUser = interaction.options.getUser('user') ?? interaction.member.user
+            const targetUser = interaction.options.getUser('user') ?? interaction.member.user;
+            let targetMember = interaction.guild.members.fetch(`${targetUser.id}`)
+                .then(member => targetMember = member)
 
             targetUser.fetch(true)
                 .then(user => {
@@ -38,11 +40,13 @@ module.exports = {
                     .setImage(user.bannerURL())
                     .addFields(
                         { name: 'Account Creation', value: `<t:${Date.parse(user.createdAt) / 1000}>`, inline: true },
-                        { name: 'Server Join', value: `<t:${Date.parse(interaction.member.joinedAt) / 1000}>`, inline: true },
+                        { name: 'Server Join', value: `<t:${Math.trunc(targetMember.joinedTimestamp / 1000)}>`, inline: true },
                         { name: 'User ID', value: `\`${user.id}\``, inline: true }
-                    )
+                    );
 
-                    interaction.reply({ embeds: [embed] })
+                    const permissionsArray = targetMember;
+
+                    interaction.reply({ embeds: [embed] });
 
                 })
 

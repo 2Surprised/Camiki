@@ -12,6 +12,10 @@ module.exports = {
                 .setName('user')
                 .setDescription('The user whose information you want to retrieve.')
             )
+            .addBooleanOption(boolean => boolean
+                .setName('show-permissions')
+                .setDescription('Whether or not to display the user\'s permissions.')
+            )
         ),
 
     async execute(interaction) {
@@ -22,10 +26,23 @@ module.exports = {
 
             const targetUser = interaction.options.getUser('user') ?? interaction.member.user;
             let targetMember = interaction.guild.members.fetch(`${targetUser.id}`)
-                .then(member => targetMember = member)
+                .then(member => targetMember = member);
 
             targetUser.fetch(true)
                 .then(user => {
+
+                    const showPermissions = interaction.options.getBoolean('show-permissions');
+                    const permissionsArray = targetMember.permissions.toArray();
+                    let userPermissionsText = [];
+
+                    if (showPermissions) {
+                        for (permission of permissionsArray) {
+                            userPermissionsText.push(`\`${permission}\``);
+                        };
+                        userPermissionsText = userPermissionsText.join(' • ')
+                    } else {
+                        userPermissionsText = 'To display permissions, run the </member info:1217507909446139994> command with `show-permissions` set to true.';
+                    }
 
                     const embed = new EmbedBuilder()
                     .setAuthor({
@@ -41,10 +58,9 @@ module.exports = {
                     .addFields(
                         { name: 'Account Creation', value: `<t:${Date.parse(user.createdAt) / 1000}>`, inline: true },
                         { name: 'Server Join', value: `<t:${Math.trunc(targetMember.joinedTimestamp / 1000)}>`, inline: true },
-                        { name: 'User ID', value: `\`${user.id}\``, inline: true }
+                        { name: 'User ID', value: `\`${user.id}\``, inline: true },
+                        { name: 'Permissions', value: `${userPermissionsText}` }
                     );
-
-                    const permissionsArray = targetMember;
 
                     interaction.reply({ embeds: [embed] });
 

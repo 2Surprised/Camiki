@@ -47,6 +47,10 @@ module.exports = {
 
                     const showPermissions = interaction.options.getBoolean('show-permissions');
                     const permissionsArray = targetMember.permissions.toArray();
+                    if (permissionsArray.includes('Administrator')) {
+                        permissionsArray.splice(permissionsArray.indexOf('Administrator'), 1, '! Adminstrator !')
+                    };
+                    permissionsArray.sort();
                     let userPermissionsText = [];
                     let numberOfPermissions = 0;
 
@@ -55,7 +59,7 @@ module.exports = {
                             numberOfPermissions += 1;
                             userPermissionsText.push(`\`${permission}\``);
                         };
-                        userPermissionsText = userPermissionsText.join(' • ');
+                        userPermissionsText = userPermissionsText.join(', ');
                     } else {
                         for (permission of permissionsArray) {
                             numberOfPermissions += 1;

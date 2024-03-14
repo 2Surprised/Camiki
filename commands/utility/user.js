@@ -15,6 +15,14 @@ module.exports = {
             .addBooleanOption(boolean => boolean
                 .setName('show-permissions')
                 .setDescription('Whether or not to display the user\'s permissions.')
+            ),
+        )
+        .addSubcommand(command => command
+            .setName('avatar')
+            .setDescription('Display a user\'s avatar.')
+            .addUserOption(user => user
+                .setName('user')
+                .setDescription('The user whose avatar you want to view.')
             )
         ),
 
@@ -85,6 +93,32 @@ module.exports = {
                         { name: `Roles (${numberOfRoles})`, value: `${userRolesText}` },
                         { name: `Permissions (${numberOfPermissions})`, value: `${userPermissionsText}` }
                     );
+
+                    interaction.reply({ embeds: [embed] });
+
+                });
+
+        } else if (subcommand === 'avatar') {
+
+            const targetUser = interaction.options.getUser('user') ?? interaction.member.user;
+            // let targetMember = interaction.guild.members.fetch(`${targetUser.id}`)
+            //     .then(member => targetMember = member);
+
+            targetUser.fetch(true)
+                .then(user => {
+
+                    const embed = new EmbedBuilder()
+                    .setAuthor({
+                        name : 'Camiki',
+                        iconURL: 'https://cdn.discordapp.com/attachments/1200510427306676264/1212693699675557908/image.png'
+                    })
+                    .setFooter({ text: 'Have a nice day!' })
+                    .setColor(targetUser.hexAccentColor)
+                    .setTitle('User Avatar')
+                    .setImage(`${targetUser.avatarURL()}`);
+                    // .setImage('https://cdn.discordapp.com/avatars/871039576247005185/32d9b83f768c512c09492267d7520e20')
+
+                    console.log(targetUser.avatarURL())
 
                     interaction.reply({ embeds: [embed] });
 

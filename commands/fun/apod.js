@@ -5,7 +5,7 @@ module.exports = {
 
     data: new SlashCommandBuilder()
         .setName('apod')
-        .setDescription('Fetches the latest Astronomy Picture of the Day (APOD).'),
+        .setDescription('Fetch the latest Astronomy Picture of the Day (APOD).'),
 
     async execute(interaction) {
 

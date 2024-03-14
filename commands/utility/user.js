@@ -7,7 +7,7 @@ module.exports = {
         .setDescription('Represents a user on Discord.')
         .addSubcommand(command => command
             .setName('info')
-            .setDescription('Displays information about a user.')
+            .setDescription('Display information about a user.')
             .addUserOption(user => user
                 .setName('user')
                 .setDescription('The user whose information you want to retrieve.')

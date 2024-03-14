@@ -13,7 +13,7 @@ module.exports = {
 
     data: new SlashCommandBuilder()
         .setName('ping')
-        .setDescription('Determines the current status of the bot.'),
+        .setDescription('Determine the current status of the bot.'),
     async execute(interaction) {
         const sent = await interaction.reply({ embeds: [pingEmbed
             .setDescription('Calculating ping...')], fetchReply: true });

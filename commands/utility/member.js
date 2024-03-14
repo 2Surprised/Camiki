@@ -31,6 +31,18 @@ module.exports = {
             targetUser.fetch(true)
                 .then(user => {
 
+                    const userRoles = targetMember.roles.cache
+                        .filter(roles => roles.id !== '1143173657473077338')
+                        .sort((a, b) => b.rawPosition - a.rawPosition);
+                    let userRolesText = [];
+
+                    for (role of userRoles) {
+                        userRolesText.push(role[1].toString())
+                        // role is actually an array with 2 elements inside,
+                        // the 1st being a string with the role ID...? and the 2nd being a Role object
+                    };
+                    userRolesText = userRolesText.join(', ');
+
                     const showPermissions = interaction.options.getBoolean('show-permissions');
                     const permissionsArray = targetMember.permissions.toArray();
                     let userPermissionsText = [];
@@ -39,10 +51,10 @@ module.exports = {
                         for (permission of permissionsArray) {
                             userPermissionsText.push(`\`${permission}\``);
                         };
-                        userPermissionsText = userPermissionsText.join(' • ')
+                        userPermissionsText = userPermissionsText.join(' • ');
                     } else {
                         userPermissionsText = 'To display permissions, run the </member info:1217507909446139994> command with `show-permissions` set to true.';
-                    }
+                    };
 
                     const embed = new EmbedBuilder()
                     .setAuthor({
@@ -59,12 +71,13 @@ module.exports = {
                         { name: 'Account Creation', value: `<t:${Date.parse(user.createdAt) / 1000}>`, inline: true },
                         { name: 'Server Join', value: `<t:${Math.trunc(targetMember.joinedTimestamp / 1000)}>`, inline: true },
                         { name: 'User ID', value: `\`${user.id}\``, inline: true },
+                        { name: 'Roles', value: `${userRolesText}` },
                         { name: 'Permissions', value: `${userPermissionsText}` }
                     );
 
                     interaction.reply({ embeds: [embed] });
 
-                })
+                });
 
         };
     },

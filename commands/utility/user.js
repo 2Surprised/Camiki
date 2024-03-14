@@ -3,11 +3,11 @@ const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 module.exports = {
 
     data: new SlashCommandBuilder()
-        .setName('member')
-        .setDescription('Represents a guild member on a Discord server.')
+        .setName('user')
+        .setDescription('Represents a user on Discord.')
         .addSubcommand(command => command
             .setName('info')
-            .setDescription('Displays information about a guild member.')
+            .setDescription('Displays information about a user.')
             .addUserOption(user => user
                 .setName('user')
                 .setDescription('The user whose information you want to retrieve.')

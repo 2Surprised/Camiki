@@ -36,11 +36,11 @@ module.exports = {
                     .setDescription(`${user} is a member of **${interaction.guild.name}**!`)
                     .setThumbnail(user.avatarURL())
                     .setImage(user.bannerURL())
-                    // .addFields(
-                    //     { name: 'Account Creation', value: user.createdAt, inline: true },
-                    //     { name: 'Server Join', value: interaction.member.joinedAt, inline: true },
-                    //     { name: 'User ID', value: user.id, inline: true }
-                    // )
+                    .addFields(
+                        { name: 'Account Creation', value: `<t:${Date.parse(user.createdAt) / 1000}>`, inline: true },
+                        { name: 'Server Join', value: `<t:${Date.parse(interaction.member.joinedAt) / 1000}>`, inline: true },
+                        { name: 'User ID', value: `\`${user.id}\``, inline: true }
+                    )
 
                     interaction.reply({ embeds: [embed] })
 

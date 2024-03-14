@@ -1,15 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, AttachmentBuilder } = require('discord.js');
 const { nasaAPIkey } = require('../../config.json')
 
-const apodEmbed = new EmbedBuilder()
-    .setAuthor({
-        name : 'Camiki',
-        iconURL: 'https://cdn.discordapp.com/attachments/1200510427306676264/1212693699675557908/image.png'
-    })
-    .setTitle('Astronomy Picture of the Day')
-    .setColor('#ff57f6')
-    .setFooter({ text: 'Have a nice day!' });
-
 module.exports = {
 
     data: new SlashCommandBuilder()
@@ -29,9 +20,19 @@ module.exports = {
             .then(data => {
                 if (data.media_type === 'image') {
 
-                    apodEmbed
+                    const apodEmbed = new EmbedBuilder()
+                    .setAuthor({
+                        name : 'Camiki',
+                        iconURL: 'https://cdn.discordapp.com/attachments/1200510427306676264/1212693699675557908/image.png'
+                    })
+                    .setColor('#ff57f6')
+                    .setFooter({ text: 'Have a nice day!' })
                     .setTitle(data.title)
-                    .setDescription(`${data.explanation}\n${data.copyright}${data.date}`)
+                    .setDescription(`${data.explanation}`)
+                    .addFields(
+                        { name: 'Copyright', value: `${data.copyright}`, inline: true },
+                        { name: 'Date', value: `${data.date}`, inline: true },
+                    )
                     .setImage(data.url)
 
                     interaction.reply({ embeds: [apodEmbed] })

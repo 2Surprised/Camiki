@@ -30,7 +30,7 @@ module.exports = {
                     .setTitle(data.title)
                     .setDescription(`${data.explanation}`)
                     .addFields(
-                        { name: 'Copyright', value: `${data.copyright}`, inline: true },
+                        { name: 'Copyright', value: `${data.copyright ??= 'None'}`, inline: true },
                         { name: 'Date', value: `${data.date}`, inline: true },
                     )
                     .setImage(data.url)
@@ -38,7 +38,7 @@ module.exports = {
                     interaction.reply({ embeds: [apodEmbed] })
 
                 } else {
-                    interaction.reply({ content: 'Sorry, the media format of this APOD is not supported. Please contact <@871039576247005185> immediately.'})
+                    interaction.reply({ content: 'Sorry, the media format of this APOD is not supported. Please contact <@871039576247005185> immediately.' })
                 }
             })
             .catch(error => {

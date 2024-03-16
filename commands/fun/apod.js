@@ -12,7 +12,6 @@ module.exports = {
         fetch(`https://api.nasa.gov/planetary/apod?api_key=${nasaAPIkey}`)
             .then(response => {
                 if (!response.ok) {
-                    console.log(response)
                     throw new Error('Invalid response.')
                 };
                 return response.json();

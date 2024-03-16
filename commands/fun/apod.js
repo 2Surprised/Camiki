@@ -26,7 +26,7 @@ module.exports = {
                         iconURL: 'https://cdn.discordapp.com/attachments/1200510427306676264/1212693699675557908/image.png'
                     })
                     .setColor('#ff57f6')
-                    .setFooter({ text: 'Have a nice day!' })
+                    .setFooter({ text: 'Data courtesy of the NASA API. Have a nice day!' })
                     .setTitle(data.title)
                     .setDescription(`${data.explanation}`)
                     .addFields(

@@ -29,7 +29,7 @@ module.exports = {
                 const imageWidth = 700;
                 const imageHeight = 500;
                 const textBufferX = 20;
-                const textBufferY = 10;
+                const textBufferY = 12;
                 const extraBottomBuffer = 2;
                 let finalHeight = textBufferY + extraBottomBuffer;
 

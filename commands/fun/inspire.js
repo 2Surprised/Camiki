@@ -73,7 +73,7 @@ module.exports = {
                             .setFile(imageFile)
                             .setName('image.png');
                             const replyEmbed = embed
-                            .setDescription('Dictums are submitted by the public, expect variation in response quality and standard, and exercise substantiation.')
+                            .setDescription('Dictums are submitted by the public, so expect variation in response quality and standard, and exercise substantiation.')
                             .setImage('attachment://image.png')
                             .setFooter({ text: 'Data courtesy of the Dictum API. Have a nice day!' });
                             interaction.reply({ embeds: [replyEmbed], files: [quotesImage] });

@@ -1,6 +1,14 @@
 const { SlashCommandBuilder, EmbedBuilder, AttachmentBuilder } = require('discord.js');
 const Jimp = require('jimp');
 
+const embed = new EmbedBuilder()
+    .setAuthor({
+        name : 'Camiki',
+        iconURL: 'https://cdn.discordapp.com/attachments/1200510427306676264/1212693699675557908/image.png'
+    })
+    .setColor('#ff57f6')
+    .setFooter({ text: 'Have a nice day!' });
+
 module.exports = {
 
     data: new SlashCommandBuilder()
@@ -57,10 +65,18 @@ module.exports = {
                             }
                         )
 
-                        image.crop(0, 0, imageWidth, finalHeight)
+                        image.crop(0, 0, imageWidth, finalHeight);
                         image.getBuffer(Jimp.MIME_PNG, (error, imageFile) => {
                             if (error) throw error;
-                            interaction.reply({ files: [imageFile] });
+
+                            const quotesImage = new AttachmentBuilder()
+                            .setFile(imageFile)
+                            .setName('image.png');
+                            const replyEmbed = embed
+                            .setDescription('Dictums are submitted by the public, expect variation in response quality and standard, and exercise substantiation.')
+                            .setImage('attachment://image.png')
+                            .setFooter({ text: 'Data courtesy of the Dictum API. Have a nice day!' });
+                            interaction.reply({ embeds: [replyEmbed], files: [quotesImage] });
                         });
 
                     });
@@ -73,6 +89,6 @@ module.exports = {
                 interaction.reply({ content: 'Sorry, the API could not be reached. Try again!', ephemeral: true })
             })
 
-    }
+    },
 
-}
+};

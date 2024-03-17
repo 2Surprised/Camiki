@@ -42,7 +42,7 @@ module.exports = {
             })
             .catch(error => {
                 console.error(error)
-                interaction.reply({ content: 'Sorry, the API could not be reached.', ephemeral: true })
+                interaction.reply({ content: 'Sorry, the API could not be reached. Try again!', ephemeral: true })
             });
 
     }

@@ -21,8 +21,9 @@ module.exports = {
                 const imageWidth = 700;
                 const imageHeight = 500;
                 const textBufferX = 20;
-                const textBufferY = 16;
-                let finalHeight = textBufferY;
+                const textBufferY = 10;
+                const extraBottomBuffer = 2;
+                let finalHeight = textBufferY + extraBottomBuffer;
 
                 new Jimp(imageWidth, imageHeight, '#FFFFFF', (error, image) => {
 
@@ -56,13 +57,7 @@ module.exports = {
                             }
                         )
 
-                        // image.crop(
-                        //     0,
-                        //     finalHeight,
-                        //     0,
-                        //     imageHeight - finalHeight
-                        // )
-
+                        image.crop(0, 0, imageWidth, finalHeight)
                         image.getBuffer(Jimp.MIME_PNG, (error, imageFile) => {
                             if (error) throw error;
                             interaction.reply({ files: [imageFile] });

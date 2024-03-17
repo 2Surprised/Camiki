@@ -113,12 +113,9 @@ module.exports = {
                         iconURL: 'https://cdn.discordapp.com/attachments/1200510427306676264/1212693699675557908/image.png'
                     })
                     .setFooter({ text: 'Have a nice day!' })
-                    .setColor(targetUser.hexAccentColor)
+                    .setColor(user.hexAccentColor)
                     .setTitle('User Avatar')
-                    .setImage(`${targetUser.avatarURL()}`);
-                    // .setImage('https://cdn.discordapp.com/avatars/871039576247005185/32d9b83f768c512c09492267d7520e20')
-
-                    console.log(targetUser.avatarURL())
+                    .setImage(`${user.avatarURL()}?size=4096`);
 
                     interaction.reply({ embeds: [embed] });
 

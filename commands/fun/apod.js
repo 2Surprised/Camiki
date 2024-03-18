@@ -5,11 +5,21 @@ module.exports = {
 
     data: new SlashCommandBuilder()
         .setName('apod')
-        .setDescription('Fetch the latest Astronomy Picture of the Day (APOD).'),
+        .setDescription('Fetch the latest Astronomy Picture of the Day (APOD).')
+        .addStringOption(string => string
+            .setName('date')
+            .setDescription('Fetch an APOD from a specific date (YYYY-MM-DD). The earliest APOD is dated 1995-06-16.')
+        ),
 
     async execute(interaction) {
 
-        fetch(`https://api.nasa.gov/planetary/apod?api_key=${nasaAPIkey}`)
+        let fetchURL = `https://api.nasa.gov/planetary/apod?api_key=${nasaAPIkey}`
+        const specifiedDate = interaction.options.getString('date');
+        if (specifiedDate) {
+            fetchURL += `&date=${specifiedDate}`
+        }
+
+        fetch(fetchURL)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Invalid response.')
@@ -17,7 +27,15 @@ module.exports = {
                 return response.json();
             })
             .then(data => {
-                if (data.media_type === 'image') {
+
+                const title = data.title;
+                const explanation = data.explanation;
+                const copyright = data.copyright ??= 'None';
+                const date = data.date;
+                const url = data.url;
+                const mediaType = data.media_type;
+
+                if (mediaType === 'image') {
 
                     const apodEmbed = new EmbedBuilder()
                     .setAuthor({
@@ -26,25 +44,25 @@ module.exports = {
                     })
                     .setColor('#ff57f6')
                     .setFooter({ text: 'Data courtesy of the NASA API. Have a nice day!' })
-                    .setTitle(data.title)
-                    .setDescription(`${data.explanation}`)
+                    .setTitle(title)
+                    .setDescription(`${explanation}`)
                     .addFields(
-                        { name: 'Copyright', value: `${data.copyright ??= 'None'}`, inline: true },
-                        { name: 'Date', value: `${data.date}`, inline: true },
+                        { name: 'Copyright', value: `${copyright}`, inline: true },
+                        { name: 'Date', value: `${date}`, inline: true },
                     )
-                    .setImage(data.url)
+                    .setImage(url);
 
-                    interaction.reply({ embeds: [apodEmbed] })
+                    interaction.reply({ embeds: [apodEmbed] });
 
                 } else {
-                    interaction.reply({ content: 'Sorry, the media format of this APOD is not supported. Please contact <@871039576247005185> immediately.' })
+                    interaction.reply({ content: 'Sorry, the media format of this APOD is not supported. Please contact <@871039576247005185> immediately.' });
                 }
             })
             .catch(error => {
-                console.error(error)
-                interaction.reply({ content: 'Sorry, the API could not be reached. Try again!', ephemeral: true })
+                console.error(error);
+                interaction.reply({ content: 'Sorry, the API did not return a valid response. Try again!\nIf you are passing in a date argument, make sure it is formatted as YYYY-MM-DD, for example, 1995-06-16, which is the earliest APOD.', ephemeral: true });
             });
 
-    }
+    },
 
-}
+};

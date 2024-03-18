@@ -60,7 +60,7 @@ module.exports = {
             })
             .catch(error => {
                 console.error(error);
-                interaction.reply({ content: 'Sorry, the API did not return a valid response. Try again!\nIf you are passing in a date argument, make sure it is formatted as YYYY-MM-DD, for example, 1995-06-16, which is the earliest APOD.', ephemeral: true });
+                interaction.reply({ content: 'Sorry, the API did not return a valid response. Try again!\n\nIf you are passing in a date argument, make sure it is formatted as YYYY-MM-DD, for example, `1995-06-16`, which is when the first APOD was posted.', ephemeral: true });
             });
 
     },

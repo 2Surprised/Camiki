@@ -48,7 +48,8 @@ module.exports = {
                 new Jimp(imageWidth, imageHeight, '#FFFFFF', (error, image) => {
 
                     if (error) throw error;
-                    Jimp.loadFont(Jimp.FONT_SANS_32_BLACK).then(font => {
+                    // Converted TTF to FNT using: https://ttf2fnt.com/
+                    Jimp.loadFont('Related/Fonts/LexendDeca-Regular.fnt').then(font => {
 
                         image.print( // Deals with the main body of text
                             font,

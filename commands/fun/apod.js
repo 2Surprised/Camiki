@@ -54,6 +54,11 @@ module.exports = {
 
                     interaction.reply({ embeds: [apodEmbed] });
 
+                } else if (mediaType === 'video') {
+                    
+                    // Embeds do not support the display of videos
+                    interaction.reply({ content: `**[${title}](${url})**:\n\n${explanation}\n\nCopyright: ${copyright}\nDate: ${date}` });
+
                 } else {
                     interaction.reply({ content: 'Sorry, the media format of this APOD is not supported. Please contact <@871039576247005185> immediately.' });
                 }

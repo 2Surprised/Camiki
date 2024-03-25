@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { nasaAPIkey } = require('../../config.json')
+const { NASA_API_KEY } = require('../../config.json')
 
 module.exports = {
 
@@ -13,7 +13,7 @@ module.exports = {
 
     async execute(interaction) {
 
-        let fetchURL = `https://api.nasa.gov/planetary/apod?api_key=${nasaAPIkey}`
+        let fetchURL = `https://api.nasa.gov/planetary/apod?api_key=${NASA_API_KEY}`
         const specifiedDate = interaction.options.getString('date');
         if (specifiedDate) {
             fetchURL += `&date=${specifiedDate}`

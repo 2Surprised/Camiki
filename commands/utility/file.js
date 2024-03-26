@@ -3,6 +3,7 @@ const consumers = require('stream/consumers');
 const fs = require('fs');
 const { spawn } = require('node:child_process');
 const path = require('path');
+const { error } = require('console');
 
 module.exports = {
 
@@ -34,8 +35,8 @@ module.exports = {
             const pathToStore = 'Related/Files/';
             const inputName = 'input.wmv';
             const outputName = 'output.mp4';
-            const inputFile = pathToStore + inputName;
-            const outputFile = pathToStore + outputName;
+            const inputPath = pathToStore + inputName;
+            const outputPath = pathToStore + outputName;
             const userAttachment = interaction.options.getAttachment('from').url;
 
             let response;
@@ -44,26 +45,28 @@ module.exports = {
             })();
 
             const buffer = await consumers.buffer(response.body);
-            fs.writeFileSync(inputFile, buffer);
-            const ffmpegCommand = `ffmpeg -i ${inputFile} ${outputFile}`;
+            fs.writeFileSync(inputPath, buffer);
+            const ffmpegCommand = `ffmpeg -i ${inputPath} ${outputPath}`;
             const ffmpegProcess = spawn(ffmpegCommand, { shell: true });
     
             // I have no idea why it's stderr
             ffmpegProcess.stderr.once('data', data => {
                 interaction.followUp('Your file is being converted, please be patient while it processes!')
             })
-            ffmpegProcess.stderr.on('data', data => {
-                console.log('Processing:', data);
-            });
+            // ffmpegProcess.stderr.on('data', data => {
+            //     console.log('Processing:', data);
+            // });
     
             ffmpegProcess.on('close', code => {
                 if (code !== 0) {
-                    console.log('Conversion failed.');
-                    interaction.followUp({ content: 'Sorry, the conversion has failed!', ephemeral: true });
+                    interaction.editReply({ content: 'Sorry, the conversion has failed!' });
                 } else if (code === 0) {
-                    console.log('Conversion success!')
-                    const convertedFile = new AttachmentBuilder().setFile(`../../Related/Files/${outputName}`);
-                    interaction.followUp({ content: 'Here is the output file after conversion!', files: [convertedFile] })
+                    const convertedFile = new AttachmentBuilder().setFile(outputPath);
+                    interaction.editReply({ content: 'Here is the output file after conversion!', files: [convertedFile] })
+                        .then(response => {
+                            fs.unlink(inputPath, (error) => { if (error) throw error; });
+                            fs.unlink(outputPath, (error) => { if (error) throw error; });
+                        })
                 };
             });
         } catch (error) {

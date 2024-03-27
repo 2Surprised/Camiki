@@ -2,6 +2,7 @@ const { SlashCommandBuilder, AttachmentBuilder } = require('discord.js');
 const consumers = require('stream/consumers');
 const fs = require('fs');
 const { spawn } = require('node:child_process');
+const Ffmpeg = require('@ffmpeg-installer/ffmpeg');
 
 module.exports = {
 
@@ -51,10 +52,10 @@ module.exports = {
             fs.writeFileSync(inputPath, buffer);
 
             // Spawns a child process that runs the ffmpeg command in a shell environment
-            const ffmpegCommand = `ffmpeg -i ${inputName} ${outputName}`;
-            const ffmpegProcess = spawn(ffmpegCommand, { cwd: pathToStore, shell: true });
-
-            await interaction.followUp('Your file is being converted, please be patient while it processes!');
+            const ffmpegProcess = spawn(Ffmpeg.path, ['-i', inputName, outputName], { cwd: pathToStore, shell: true });
+            ffmpegProcess.stderr.once('data', data => {
+                interaction.followUp('Your file is being converted, please be patient while it processes!');
+            });
     
             ffmpegProcess.on('close', code => {
 
@@ -62,7 +63,7 @@ module.exports = {
                     interaction.editReply({ content: `Sorry, the conversion has failed! ${errorAdvice}` });
                     fs.unlink(inputPath, (error) => { if (error) { throw error }; });
                     return;
-                }
+                };
 
                 const convertedFile = new AttachmentBuilder().setFile(outputPath).setName(`${finalName}`);
                 interaction.editReply({ content: `Here is the output file after conversion, in ${wantedFormat.toUpperCase()} format!`, files: [convertedFile] })
@@ -72,8 +73,8 @@ module.exports = {
                     })
                     .catch(error => {
                         console.error(error);
-                        interaction.editReply({ content: `${errorDefault} ${errorAdvice}` })
-                    })
+                        interaction.editReply({ content: `${errorDefault} ${errorAdvice}` });
+                    });
 
             });
 

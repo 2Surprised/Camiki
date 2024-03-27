@@ -44,6 +44,7 @@ module.exports = {
             const inputPath = pathToStore + inputName;
             const outputPath = pathToStore + outputName;
 
+            // Downloads the attachment
             let response;
             await (async () => {
                 response = await fetch(attachedURL);
@@ -51,10 +52,11 @@ module.exports = {
             const buffer = await consumers.buffer(response.body);
             fs.writeFileSync(inputPath, buffer);
 
-            const ffmpegCommand = `ffmpeg -i ${inputPath} ${outputPath}`;
+            // Spawns a child process that runs the ffmpeg command in a shell environment
+            const ffmpegCommand = `ffmpeg -i ${inputName} ${outputName}`;
             let ffmpegProcess;
             try {
-                ffmpegProcess = spawn(ffmpegCommand, { shell: true });
+                ffmpegProcess = spawn(ffmpegCommand, { cwd: pathToStore, shell: true });
             } catch (error) {
                 await (async () => {
                     fs.unlink(inputPath, (error) => { if (error) { throw error }; });
@@ -72,9 +74,12 @@ module.exports = {
     
             ffmpegProcess.on('close', code => {
                 if (code !== 0) {
+                    
                     interaction.editReply({ content: `Sorry, the conversion has failed! ${errorAdvice}` });
                     fs.unlink(inputPath, (error) => { if (error) { throw error }; });
+
                 } else if (code === 0) {
+
                     const convertedFile = new AttachmentBuilder().setFile(outputPath);
                     interaction.editReply({ content: `Here is the output file after conversion, in ${wantedFormat.toUpperCase()} format!`, files: [convertedFile] })
                         .then(response => {
@@ -85,6 +90,7 @@ module.exports = {
                             console.error(error);
                             interaction.editReply({ content: `${errorDefault} ${errorAdvice}` })
                         })
+                    
                 };
             });
 

@@ -74,7 +74,7 @@ module.exports = {
     
             ffmpegProcess.on('close', code => {
                 if (code !== 0) {
-                    
+
                     interaction.editReply({ content: `Sorry, the conversion has failed! ${errorAdvice}` });
                     fs.unlink(inputPath, (error) => { if (error) { throw error }; });
 
@@ -95,7 +95,7 @@ module.exports = {
             });
 
         } catch (error) {
-            console.log(error);
+            console.error(error);
             interaction.followUp(`${errorDefault} ${errorAdvice}`);
         };
 

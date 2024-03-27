@@ -2,8 +2,6 @@ const { SlashCommandBuilder, AttachmentBuilder } = require('discord.js');
 const consumers = require('stream/consumers');
 const fs = require('fs');
 const { spawn } = require('node:child_process');
-const path = require('path');
-const { error } = require('console');
 
 module.exports = {
 

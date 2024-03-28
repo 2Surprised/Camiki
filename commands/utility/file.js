@@ -38,7 +38,7 @@ module.exports = {
         const wantedFormat = interaction.options.getString('to').toLowerCase();
         const finalName = `${userAttachment.name.split('.').slice(0, -1).join('')}.${wantedFormat}`;
 
-        const pathToStore = 'Related/Files/';
+        const pathToStore = 'Related/TempFiles/';
         const inputName = `${Date.now()}.${originalFormat}`;
         const outputName = `${Date.now()}.${wantedFormat}`;
         const inputPath = pathToStore + inputName;

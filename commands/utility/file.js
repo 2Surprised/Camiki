@@ -34,6 +34,7 @@ module.exports = {
 
         const userAttachment = interaction.options.getAttachment('from');
         const attachedURL = userAttachment.url;
+        const originalMediaType = userAttachment.contentType.split('/').slice(0, 1).join('');
         const originalFormat = userAttachment.name.split('.').slice(-1).join('');
         const wantedFormat = interaction.options.getString('to').toLowerCase();
         const finalName = `${userAttachment.name.split('.').slice(0, -1).join('')}.${wantedFormat}`;
@@ -51,8 +52,15 @@ module.exports = {
             const buffer = await consumers.buffer(response.body);
             fs.writeFileSync(inputPath, buffer);
 
+            let arguments = '';
+            if (originalMediaType === 'video') {
+                // vsync has been deprecated
+                // arguments = '-vf mpdecimate -fps_mode vfr';
+                arguments = '-vf mpdecimate -vsync vfr';
+            };
+
             // Spawns a child process that runs the ffmpeg command in a shell environment
-            const ffmpegProcess = spawn(Ffmpeg.path, ['-i', inputName, outputName], { cwd: pathToStore, shell: true });
+            const ffmpegProcess = spawn(Ffmpeg.path, ['-i', inputName, arguments, outputName], { cwd: pathToStore, shell: true });
             ffmpegProcess.stderr.once('data', data => {
                 interaction.followUp('Your file is being converted, please be patient while it processes!');
             });

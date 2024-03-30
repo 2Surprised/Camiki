@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, AttachmentBuilder } = require('discord.js');
 const consumers = require('stream/consumers');
-const fs = require('fs');
+const fs = require('node:fs');
 const { spawn } = require('node:child_process');
 const Ffmpeg = require('@ffmpeg-installer/ffmpeg');
 
@@ -67,9 +67,14 @@ module.exports = {
                     arguments = '-vf mpdecimate -vsync vfr';
                 };
     
-                // Spawns a child process that runs the ffmpeg command in a shell environment
+                // Spawns a child process that runs the ffmpeg command in a shell environment (NPM package)
                 const ffmpegProcess = spawn(Ffmpeg.path, ['-i', inputName, arguments, outputName], { cwd: pathToStore, shell: true });
                 ffmpegProcess.stderr.once('data', data => {
+
+                    // Limits the total CPU usage of the child process (Unproven) (Installed through sudo apt install cpulimit)
+                    const ffmpegPid = ffmpegProcess.pid;
+                    const cpuLimiter = spawn('cpulimit', ['-p', ffmpegPid, '-l', '50'], { shell: true });
+
                     timeElapsed = Date.now();
                     interaction.followUp(`Your file has begun processing since <t:${Math.trunc(Date.now() / 1000)}:R>!`);
                 });

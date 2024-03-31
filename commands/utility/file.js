@@ -101,7 +101,10 @@ module.exports = {
                     };
     
                     const convertedFile = new AttachmentBuilder().setFile(outputPath).setName(`${finalName}`);
-                    interaction.editReply({ content: `Here is the original ${originalFormat.toUpperCase()} file after conversion, in ${wantedFormat.toUpperCase()} format! (${getTimeElapsed()})`, files: [convertedFile] })
+                    interaction.editReply({
+                        content: `Here is the original ${originalFormat.toUpperCase()} file after conversion, in ${wantedFormat.toUpperCase()} format! (${getTimeElapsed()})`,
+                        files: [convertedFile]
+                    })
                         .then(response => {
                             fs.unlink(inputPath, (error) => { if (error) { throw error }; });
                             fs.unlink(outputPath, (error) => { if (error) { throw error }; });

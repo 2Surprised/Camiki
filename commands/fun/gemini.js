@@ -1,6 +1,7 @@
-const { SlashCommandBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
-const genAI = new GoogleGenerativeAI(process.env.API_KEY);
+const { GEMINI_API_KEY } = require('../../config.json');
+const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
 module.exports = {
 
@@ -14,12 +15,31 @@ module.exports = {
         ),
 
     async execute(interaction) {
-        const gemini = genAI.getGenerativeModel({ model: "gemini-1.0-pro"});
-        const chat = gemini.startChat();
-        const message = interaction.options.getString('prompt');
-        const response = await chat.sendMessage(message);
-        console.log(response);
-        await interaction.reply({ content: `${response.text()}` });
-    }
+        try {
 
+            interaction.deferReply();
+
+            const model = genAI.getGenerativeModel({ model: "gemini-pro"});
+            const chat = model.startChat();
+            const message = interaction.options.getString('prompt');
+            const result = await chat.sendMessage(message);
+            const response = await result.response;
+            const text = response.text();
+
+            const embed = new EmbedBuilder()
+                .setAuthor({
+                    name : 'Camiki',
+                    iconURL: 'https://cdn.discordapp.com/attachments/1200510427306676264/1212693699675557908/image.png'
+                })
+                .setColor('#ff57f6')
+                .setDescription(`${text}`)
+                .setFooter({ text: 'Powered by Gemini. Have a nice day!' });
+            
+            interaction.editReply({ embeds: [embed] });
+
+        } catch (error) {
+            interaction.reply('Sorry, Gemini\'s response couldn\'t be displayed.')
+            console.error(error);
+        }
+    }
 }

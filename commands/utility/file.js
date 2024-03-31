@@ -3,6 +3,7 @@ const consumers = require('stream/consumers');
 const fs = require('node:fs');
 const { spawn } = require('node:child_process');
 const Ffmpeg = require('@ffmpeg-installer/ffmpeg');
+const cpuLimit = require('cpulimit');
 
 module.exports = {
 
@@ -43,23 +44,30 @@ module.exports = {
             const finalName = `${userAttachment.name.split('.').slice(0, -1).join('')}.${wantedFormat}`;
     
             const pathToStore = 'Related/TempFiles/';
-            const inputName = `${Date.now()}.${originalFormat}`;
-            const outputName = `${Date.now()}.${wantedFormat}`;
+            const temporaryName = Date.now();
+            const inputName = `${temporaryName}.${originalFormat}`;
+            const outputName = `${temporaryName}.${wantedFormat}`;
             const inputPath = pathToStore + inputName;
             const outputPath = pathToStore + outputName;
-    
+
+            const cpuLimitOptions = {
+                limit: 20, // CPU usage percentage
+                includeChildren: true
+            };
+
             try {
+
+                let currentTime;
+                function getTimeElapsed() {
+                    return currentTime = `${((Date.now() - currentTime) / 1000).toFixed(2)}s`;
+                };
     
                 // Downloads the attachment
                 const response = await fetch(attachedURL);
                 const buffer = await consumers.buffer(response.body);
                 fs.writeFileSync(inputPath, buffer);
     
-                let timeElapsed;
-                function getTimeElapsed() {
-                    return timeElapsed = `${((Date.now() - timeElapsed) / 1000).toFixed(2)}s`;
-                };
-    
+                // ffmpeg causing TONS of duplicated frames for videos, this deletes them if input is a video
                 let arguments = '';
                 if (originalMediaType === 'video') {
                     // vsync has been deprecated
@@ -67,16 +75,21 @@ module.exports = {
                     arguments = '-vf mpdecimate -vsync vfr';
                 };
     
-                // Spawns a child process that runs the ffmpeg command in a shell environment (NPM package)
+                // Spawns a child process that runs the ffmpeg command in a shell environment
                 const ffmpegProcess = spawn(Ffmpeg.path, ['-i', inputName, arguments, outputName], { cwd: pathToStore, shell: true });
+                
+                // Limits the total CPU usage of the child process
+                cpuLimitOptions.pid = ffmpegProcess.pid;
+                cpuLimit.createProcessFamily(cpuLimitOptions, (error, processFamily) => {
+                    if (error) { throw error };
+                    cpuLimit.limit(processFamily, cpuLimitOptions, (error) => {
+                        if (error) { throw error };
+                    });
+                });
+
                 ffmpegProcess.stderr.once('data', data => {
-
-                    // Limits the total CPU usage of the child process (Unproven) (Installed through sudo apt install cpulimit)
-                    const ffmpegPid = ffmpegProcess.pid;
-                    const cpuLimiter = spawn('cpulimit', ['-p', ffmpegPid, '-l', '50'], { shell: true });
-
-                    timeElapsed = Date.now();
-                    interaction.followUp(`Your file has begun processing since <t:${Math.trunc(Date.now() / 1000)}:R>!`);
+                    currentTime = Date.now();
+                    interaction.followUp(`Your file has begun processing since <t:${Math.trunc(currentTime / 1000)}:R>!`);
                 });
         
                 ffmpegProcess.on('close', code => {

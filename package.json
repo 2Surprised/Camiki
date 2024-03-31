@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "cpulimit": "^1.1.4",
     "discord.js": "^14.14.1",
     "jimp": "^0.22.12",
     "nodemon": "^3.1.0"

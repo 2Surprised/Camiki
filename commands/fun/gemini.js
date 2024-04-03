@@ -38,8 +38,8 @@ module.exports = {
             interaction.editReply({ embeds: [embed] });
 
         } catch (error) {
-            interaction.reply('Sorry, Gemini\'s response couldn\'t be displayed.')
-            console.error(error);
+            console.log(error);
+            interaction.followUp('Sorry, Gemini\'s response couldn\'t be displayed, or it isn\'t supported.');
         }
     }
 }

@@ -131,7 +131,7 @@ module.exports = {
             })
 
         } else {
-            interaction.reply({ content: 'You cannot run this command.' });
+            interaction.editReply({ content: 'You cannot run this command.' });
         }
 
     }

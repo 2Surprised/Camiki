@@ -76,7 +76,7 @@ module.exports = {
                 }
             }
 
-            const cpu = (utilization.cpu_absolute * 100).toFixed(2);
+            const cpu = (utilization.cpu_absolute).toFixed(2);
             const cpuLimit = limits.cpu;
             const memory = bytesConversion(utilization.memory_bytes, 'MB')
             const memoryLimit = limits.memory;
@@ -125,8 +125,9 @@ module.exports = {
                 -d '{
                 "signal": "restart"
             }'`, (error => {
+                // Only runs when command is executed outside of the server... for obvious reasons
                 if (!error) {
-                    interaction.editReply('The restart process has successfully been executed.')
+                    interaction.editReply('The restart process has successfully been executed on the server.')
                     return;
                 }
                 interaction.editReply('Sorry, the restart failed.')

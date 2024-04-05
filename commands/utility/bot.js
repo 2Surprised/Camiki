@@ -38,7 +38,7 @@ module.exports = {
                 .then(result => attributes = result.attributes)
                 .catch(error => {
                     console.error(error);
-                    interaction.editReply('Sorry, Pterodactyl\'s API response was not expected.')
+                    interaction.editReply('Sorry, Pterodactyl\'s API response was unexpected.')
                     return;
                 })
 
@@ -50,7 +50,7 @@ module.exports = {
                 .then(result => utilization = result.attributes.resources)
                 .catch(error => {
                     console.error(error);
-                    interaction.editReply('Sorry, Pterodactyl\'s API response was not expected.')
+                    interaction.editReply('Sorry, Pterodactyl\'s API response was unexpected.')
                     return;
                 })
 
@@ -127,10 +127,11 @@ module.exports = {
             }'`, (error => {
                 // Only runs when command is executed outside of the server... for obvious reasons
                 if (!error) {
-                    interaction.editReply('The restart process has successfully been executed on the server.')
+                    interaction.editReply('The restart process has successfully been executed on the server.');
                     return;
                 }
-                interaction.editReply('Sorry, the restart failed.')
+                console.error(error);
+                interaction.editReply('Sorry, the restart failed.');
             }))
 
         } else {

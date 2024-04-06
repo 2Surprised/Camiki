@@ -116,7 +116,7 @@ module.exports = {
             await interaction.editReply('Restarting Camiki...');
 
             // Fetch API doesn't work for some reason (400), cURL works though
-            exec(`curl https://panel.sillydev.co.uk/api/client/servers/${serverId}/power \
+            exec(`curl https://panel.sillydev.co.uk/api/client/servers/${SILLYDEV_SERVER_ID}/power \
                 -H 'Accept: application/json' \
                 -H 'Content-Type: application/json' \
                 -H 'Authorization: Bearer ${SILLYDEV_PANEL_TOKEN}' \

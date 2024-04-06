@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, IntegrationApplication } = require('discord.js');
-const { OWNER_ID, SILLYDEV_PANEL_TOKEN } = require('../../config.json');
+const { OWNER_ID, SILLYDEV_PANEL_TOKEN, SILLYDEV_SERVER_ID } = require('../../config.json');
 const { exec } = require('node:child_process');
 
 module.exports = {
@@ -23,7 +23,6 @@ module.exports = {
         const subcommandGroup = interaction.options.getSubcommandGroup();
         const subcommand = interaction.options.getSubcommand();
         const userRunningId = interaction.user.id;
-        const serverId = '1cefcf27';
 
         if (subcommand === 'info' && userRunningId === OWNER_ID) {
 
@@ -31,7 +30,7 @@ module.exports = {
             let utilization;
 
             // Gets basic server information
-            await fetch(`https://panel.sillydev.co.uk/api/client/servers/${serverId}`, {
+            await fetch(`https://panel.sillydev.co.uk/api/client/servers/${SILLYDEV_SERVER_ID}`, {
                 headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${SILLYDEV_PANEL_TOKEN}` }
             })
                 .then(response => response.json())
@@ -43,7 +42,7 @@ module.exports = {
                 })
 
             // Gets resource usage
-            await fetch(`https://panel.sillydev.co.uk/api/client/servers/${serverId}/resources`, {
+            await fetch(`https://panel.sillydev.co.uk/api/client/servers/${SILLYDEV_SERVER_ID}/resources`, {
                 headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${SILLYDEV_PANEL_TOKEN}` }
             })
                 .then(response => response.json())

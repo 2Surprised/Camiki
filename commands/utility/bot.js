@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder, IntegrationApplication } = require('discord.js');
 const { OWNER_ID, SILLYDEV_PANEL_TOKEN } = require('../../config.json');
+const { exec } = require('node:child_process');
 
 module.exports = {
 
@@ -12,7 +13,7 @@ module.exports = {
         )
         .addSubcommand(subcommand => subcommand
             .setName('restart')
-            .setDescription('PRIVATE: Restart Camiki')
+            .setDescription('PRIVATE: Restart Camiki.')
         ),
 
     async execute(interaction) {
@@ -37,7 +38,7 @@ module.exports = {
                 .then(result => attributes = result.attributes)
                 .catch(error => {
                     console.error(error);
-                    interaction.editReply('Sorry, Pterodactyl\'s API response was not expected.')
+                    interaction.editReply('Sorry, Pterodactyl\'s API response was unexpected.')
                     return;
                 })
 
@@ -49,7 +50,7 @@ module.exports = {
                 .then(result => utilization = result.attributes.resources)
                 .catch(error => {
                     console.error(error);
-                    interaction.editReply('Sorry, Pterodactyl\'s API response was not expected.')
+                    interaction.editReply('Sorry, Pterodactyl\'s API response was unexpected.')
                     return;
                 })
 
@@ -75,7 +76,7 @@ module.exports = {
                 }
             }
 
-            const cpu = (utilization.cpu_absolute * 100).toFixed(2);
+            const cpu = (utilization.cpu_absolute).toFixed(2);
             const cpuLimit = limits.cpu;
             const memory = bytesConversion(utilization.memory_bytes, 'MB')
             const memoryLimit = limits.memory;
@@ -115,20 +116,23 @@ module.exports = {
 
             await interaction.editReply('Restarting Camiki...');
 
-            fetch(`https://panel.sillydev.co.uk/api/client/servers/${serverId}/power`, {
-                method: 'POST',
-                headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${SILLYDEV_PANEL_TOKEN}` },
-                body: { 'signal': 'restart' }
-            })
-            .then(response => {
-                if (response.status === 422) {
-                    throw new Error('Returned 422 status:', response.statusText);
+            // Fetch API doesn't work for some reason (400), cURL works though
+            exec(`curl https://panel.sillydev.co.uk/api/client/servers/${serverId}/power \
+                -H 'Accept: application/json' \
+                -H 'Content-Type: application/json' \
+                -H 'Authorization: Bearer ${SILLYDEV_PANEL_TOKEN}' \
+                -X POST \
+                -d '{
+                "signal": "restart"
+            }'`, (error => {
+                // Only runs when command is executed outside of the server... for obvious reasons
+                if (!error) {
+                    interaction.editReply('The restart process has successfully been executed on the server.');
+                    return;
                 }
-            })
-            .catch(error => {
                 console.error(error);
                 interaction.editReply('Sorry, the restart failed.');
-            })
+            }))
 
         } else {
             interaction.editReply({ content: 'You cannot run this command.' });

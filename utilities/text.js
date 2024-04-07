@@ -7,7 +7,11 @@ function splitText(inputText, paragraphLimit = 2000) {
 
     function splitWithParagraphs(textSnippet) {
         const paragraphs = textSnippet.split('\n\n')
-        const paragraphsWithinLimit = []
+        const brokenUpTextWithinLimit = []
+
+        for (const paragraph of paragraphs) {
+            
+        }
     }
 
     function splitWithoutParagraphs(textSnippet) {

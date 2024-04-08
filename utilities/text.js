@@ -17,49 +17,41 @@ function splitText(inputText, characterLimit) {
     const brokenUpTextWithinLimit = [] // Final result to return
     const alreadyInserted = [] // Strings that will be added to the final result later on
     let lengthOfStringsAlreadyInserted = 0 // Length of all the strings in alreadyInserted[]
-    let whatIsX = ''
+    let whatIsX = '' // Whether the current teXt is a paragraph/sentence, word, or character
 
     // This will populate brokenUpTextWithinLimit[] with strings, except for the final alreadyInserted[]
-    for (const textSnippet of textSnippets) {
-        forEachTeXt(textSnippet)
-    }
-
+    for (const textSnippet of textSnippets) { forEachTeXt(textSnippet, true) }
     // This will push the remaining strings in alreadyInserted[]
     combineTeXt()
 
     return brokenUpTextWithinLimit;
 
-
-
-
+// ---------------------------------------- Functions Used ----------------------------------------
 
     // The combineText() function handles the logic which determines how strings in alreadyInserted[]
     // are combined together to be pushed as a single string into brokenUpTextWithinLimit[].
 
     function combineTeXt() {
         let toString = ''
-        if (whatIsX === 'paragraph') {
-            toString = alreadyInserted.join('\n\n')
-        } else if (whatIsX === 'word') {
-            toString = alreadyInserted.join(' ')
-        } else {
-            toString = alreadyInserted.join('')
-        }
+
+        whatIsX === 'paragraph' ?
+        toString = alreadyInserted.join('\n\n') : // if teXt is a paragraph
+        whatIsX === 'word' ?
+        toString = alreadyInserted.join(' ') : // if teXt is a word
+        toString = alreadyInserted.join('') // else teXt must be a character
+
         brokenUpTextWithinLimit.push(toString)
     }
 
     // The forEachTeXt() function handles all the logic that processes the input text.
     // teXt (x) can be an entire paragraph of text, words within a paragraph, or characters of a word.
 
-    function forEachTeXt(x) {
+    function forEachTeXt(x, isFirstExecution) {
 
-        // Determines the type of teXt currently being processed
-        if (x.length === 1) {
-            whatIsX = 'character'
-        } else if (!x.includes(' ')) {
-            whatIsX = 'word'
-        } else {
-            whatIsX = 'paragraph' // or sentence
+        // If forEachTeXt has been passed a new textSnippet, it treats it as a paragraph by default
+        // This is because textSnippets is an array of string(s) divided along instances of '\n\n'
+        if (isFirstExecution) {
+            whatIsX = 'paragraph'
         }
         
         console.log(`\n"${x}" is a ${whatIsX}`)
@@ -68,16 +60,18 @@ function splitText(inputText, characterLimit) {
         // If a single teXt is already over the limit, this splits the teXt up into multiple parts.
         // It then calls forEachTeXt() on each of the parts, making sure all strings are processed.
         if (x.length > characterLimit) {
-            // Must be a paragraph or sentence, reduces to words
             if (whatIsX === 'paragraph') {
+                // Must be a paragraph or sentence, reduces to words
                 console.log(`Reduced to words!`)
                 const words = x.split(' ')
-                for (const word of words) { forEachTeXt(word) }
+                whatIsX = 'word'
+                for (const word of words) { forEachTeXt(word, false) }
             } else {
                 // Must be a word, reduces to characters
                 console.log(`Reduced to characters!`)
                 const characters = x.split('')
-                for (const character of characters) { forEachTeXt(character) }
+                whatIsX = 'character'
+                for (const character of characters) { forEachTeXt(character, false) }
             }
         }
 
@@ -93,7 +87,7 @@ function splitText(inputText, characterLimit) {
             alreadyInserted.length = 0
             lengthOfStringsAlreadyInserted = 0
             // Continues the processing of teXt
-            forEachTeXt(x)
+            forEachTeXt(x, false)
         }
 
         // PUSH:
@@ -102,13 +96,15 @@ function splitText(inputText, characterLimit) {
         else {
             console.log(`FINE ${x.length} + ${lengthOfStringsAlreadyInserted} = ${x.length + lengthOfStringsAlreadyInserted}`)
             alreadyInserted.push(x)
-            lengthOfStringsAlreadyInserted += x.length
+            lengthOfStringsAlreadyInserted += (x.length + 
+                (whatIsX === 'word' ? 1 : // If teXt is a word, adds one to account for whitespace between words
+                whatIsX === 'paragraph' ? 2 : 0)) // If teXt is a paragraph, adds two to account for 2 \n characters
         }
     }
 
 }
 
-            // TODO: DOES NOT ACCOUNT FOR WHITESPACE DURING CALCULATIONS
+            // TODO: DOES NOT ACCOUNT FOR WHITESPACE BETWEEN 'CHARACTER' WORDS DURING CALCULATIONS
             // TODO: DOES NOT ACCOUNT FOR DIFFERENT teXt TYPES
 
             // If a single X is already over the limit, splits X up into multiple parts (reduce)
@@ -117,6 +113,6 @@ function splitText(inputText, characterLimit) {
 
 const testString = `stupid me lol\n\ndumbass\n\nThe gerund of a bla is I 27 omg what is your problem\n\nabsolutely hate everything that 34`
 
-console.log(splitText(testString, 30))
+console.log(splitText(testString, 5))
 
 module.exports = { splitText };

@@ -69,16 +69,16 @@ function splitText(inputText, characterLimit) {
             // word, specifically, a new word that shouldn't be joined together with the characters before.
             pushInsertedTeXt()
             whatIsX = 'word'
-            console.log('\nNEW WORD\n')
+            console.log('\nNEW WORD (ADIASDADADASDA)\n')
         } else if (whatWasX === 'word' && whatIsX === 'character') {
             // If the teXt used to be a word, and now the teXt is characters, then those characters must
             // belong to a new word that shouldn't be joined together with the word before.
             pushInsertedTeXt()
-            whatWasX = 'character'
-            console.log('\nNEW WORD TROLOL\n')
+            console.log('\nNEW WORD (TROLOL)\n')
         }
         
         console.log(`\n"${x}" is a ${whatIsX}, last one was ${whatWasX}`)
+        whatWasX = whatIsX
 
         // REDUCE:
         // If a single teXt is already over the limit, this splits the teXt up into multiple parts.
@@ -127,14 +127,19 @@ function splitText(inputText, characterLimit) {
 
 }
 
-            // TODO: DOES NOT ACCOUNT FOR DIFFERENT teXt TYPES
+            // TODO: WTF IS THIS OVERCOMPLICATED FUNCTION LOL
 
             // If a single X is already over the limit, splits X up into multiple parts (reduce)
             // If a single X surpasses the limit when added, inserts the rest and resets (restart)
             // If a single X doesn't surpass the limit when added, inserts it with the rest (push)
 
-const testString = `stupid me lol\n\ndumbass\n\nThe gerund of a bla is I 27 omg what is your problem\n\nabsolutely hate everything that 34`
+// let testString = `For anyone who is interested in the total solar eclipse later:\n\nCatch this stream on April 9, 2024 1:00 AM, which is in 2 hours. (!!)`
+let testString = `stupid me lol\ndumbass\n\nThe gerund of a bla is I 27 omg what is your problem\n\nabsolutely hate everything that 34`
+// let testString = `thisisallarandomjumbleoftextforthepurposesoftestingthisgoddamnfunctionohmygoditishorrible`
+const testResult = splitText(testString, 5)
+const testResultJoined = testResult.join(' ')
 
-console.log(splitText(testString, 4))
+console.log(testResult)
+console.log(testResultJoined)
 
 module.exports = { splitText };

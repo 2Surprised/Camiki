@@ -142,9 +142,9 @@ module.exports = { splitText };
 
 // ------------------------------------------- TESTING -------------------------------------------
 
-const testString = `randomstuffgo lol a b c d e f gaoosdoasihoaishdoaisdaoisdjaois h hhhhhh lol`
+let testString = `randomstuffgo lol a b c d e f gaoosdoasihoaishdoaisdaoisdjaois h hhhhhh lol`
 
-const testArray = splitText(testString, 40)
+const testArray = splitText(testString, 5)
 const testJoined = testArray.join(' ')
 
 console.log(testArray)

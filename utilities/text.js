@@ -110,19 +110,26 @@ function splitText(inputText, characterLimit) {
         // the teXt is inserted along with the rest of the strings in alreadyInserted[].
         else {
 
-            // If the last teXt was a paragraph, the current teXt must belong to a new textSnippet (paragraph)
+            let accountForWhitespace = 0
+
+            // If the last teXt was a paragraph, the current teXt must belong to a new textSnippet (paragraph).
+            // Therefore, to give the paragraphs the necessary distancing, 2 \n\n characters have to be added.
             if (whatWasX === 'paragraph' && !isVeryFirstTextSnippet) {
                 alreadyInserted.push(`\n\n${x}`)
-                lengthOfStringsAlreadyInserted += (x.length + 2 + // Adds two to account for 2 \n characters
-                    (whatIsX === 'word' ? 1 : // If teXt is a word, adds one to account for whitespace between words
-                    whatIsX === 'paragraph' ? 2 : 0)) // If teXt is a paragraph, adds two to account for 2 \n characters    
+                accountForWhitespace += 2 // Adds two to account for 2 \n\n characters
+
+            // This runs if the textSnippet is the very first (i.e. very first string) to be handled, so
+            // there shouldn't be 2 preceding \n\n characters, as it doesn't have any preceding teXt.
             } else {
                 isVeryFirstTextSnippet = false
                 alreadyInserted.push(x)
-                lengthOfStringsAlreadyInserted += (x.length + 
-                    (whatIsX === 'word' ? 1 : // If teXt is a word, adds one to account for whitespace between words
-                    whatIsX === 'paragraph' ? 2 : 0)) // If teXt is a paragraph, adds two to account for 2 \n characters
             }
+
+            // Handles logic related to accounting for whitespace, so the character limit isn't exceeded
+            lengthOfStringsAlreadyInserted += (x.length + accountForWhitespace + (
+                whatIsX === 'word' ? 1 : // If teXt is a word, adds one to account for whitespace between words
+                whatIsX === 'paragraph' ? 2 : 0 // If teXt is a paragraph, adds two to account for \n\n
+            ))
 
             // Updates whatWasX before the next teXt is processed
             whatWasX = whatIsX
@@ -137,7 +144,7 @@ module.exports = { splitText };
 
 const testString = `randomstuffgo lol a b c d e f gaoosdoasihoaishdoaisdaoisdjaois h hhhhhh lol`
 
-const testArray = splitText(testString, 5)
+const testArray = splitText(testString, 40)
 const testJoined = testArray.join(' ')
 
 console.log(testArray)

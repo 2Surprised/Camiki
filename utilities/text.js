@@ -54,11 +54,12 @@ function splitText(inputText, characterLimit) {
     // The forEachTeXt() function handles all the logic that processes the input text.
     // teXt (x) can be an entire paragraph of text, words within a paragraph, or characters of a word.
     function forEachTeXt(x, isNewTextSnippet) {
-        if (typeof isNewTextSnippet !== 'boolean' ) { throw new Error('A boolean value must be provided.') }
 
+        // Determines if the strings in alreadyInserted[] need to be pushed to brokenUpTextWithinLimit[]
+        // so that different words won't be stuck together, but rather split up, regardless of the limit.
         if (isNewTextSnippet) {
-            // If forEachTeXt has been passed a new textSnippet, it treats it as a paragraph by default
-            // This is because textSnippets is an array of string(s) divided along instances of '\n\n'
+            // If forEachTeXt has been passed a new textSnippet, it treats it as a paragraph by default.
+            // This is because textSnippets is an array of string(s) divided along instances of '\n\n'.
             pushInsertedTeXt()
             whatIsX = 'paragraph'
             whatWasX = whatIsX
@@ -109,7 +110,6 @@ function splitText(inputText, characterLimit) {
         // If a teXt doesn't surpass the limit when added with all the strings already inserted,
         // the teXt is inserted along with the rest of the strings in alreadyInserted[].
         else {
-
             let accountForWhitespace = 0
 
             // If the last teXt was a paragraph, the current teXt must belong to a new textSnippet (paragraph).

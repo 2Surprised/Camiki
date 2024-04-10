@@ -58,6 +58,7 @@ function splitText(inputText, characterLimit) {
         // Determines if the strings in alreadyInserted[] need to be pushed to brokenUpTextWithinLimit[]
         // so that different words won't be stuck together, but rather split up, regardless of the limit.
         if (isNewTextSnippet) {
+            console.log('\n\n\nNEW TEXT SNIPPET\n')
             // If forEachTeXt has been passed a new textSnippet, it treats it as a paragraph by default.
             // This is because textSnippets is an array of string(s) divided along instances of '\n\n'.
             pushInsertedTeXt()
@@ -74,11 +75,17 @@ function splitText(inputText, characterLimit) {
             pushInsertedTeXt()
         }
 
+        console.log('\n')
+        console.log(`whatWasX: ${whatWasX}`)
+        console.log(`whatIsX: ${whatIsX}`)
+        console.log(`teXt: ${String.raw`${x}`}`)
+
         // REDUCE:
         // If a single teXt is already over the limit, this splits the teXt up into multiple parts.
         // It then calls forEachTeXt() on each of the parts, making sure all strings are processed.
         if (x.length > characterLimit) {
             if (whatIsX === 'paragraph') {
+                console.log('Reduced to words!')
                 // Must be a paragraph or sentence, reduces to words
                 const words = x.split(' ')
                 // Updates teXt types before the next teXt is processed
@@ -86,6 +93,7 @@ function splitText(inputText, characterLimit) {
                 whatIsX = 'word'
                 for (const word of words) { forEachTeXt(word, false) }
             } else {
+                console.log('Reduced to characters!')
                 // Must be a word, reduces to characters
                 const characters = x.split('')
                 // Updates teXt types before the next teXt is processed
@@ -100,6 +108,7 @@ function splitText(inputText, characterLimit) {
         // all the strings in alreadyInserted[] are pushed to brokenUpTextWithinLimit[], and the
         // current teXt will be passed into the forEachTeXt() function again to be processed properly.
         else if (x.length + lengthOfStringsAlreadyInserted > characterLimit) {
+            console.log('RESTARTING')
             // Pushes all currently stored strings, then resets all values used in processing
             pushInsertedTeXt()
             // Continues the processing of teXt
@@ -115,12 +124,14 @@ function splitText(inputText, characterLimit) {
             // If the last teXt was a paragraph, the current teXt must belong to a new textSnippet (paragraph).
             // Therefore, to give the paragraphs the necessary distancing, 2 \n\n characters have to be added.
             if (whatWasX === 'paragraph' && !isVeryFirstTextSnippet) {
+                console.log(`INSERTING: ${String.raw`\n\n${x}`}`)
                 alreadyInserted.push(`\n\n${x}`)
                 accountForWhitespace += 2 // Adds two to account for 2 \n\n characters
 
             // This runs if the textSnippet is the very first (i.e. very first string) to be handled, so
             // there shouldn't be 2 preceding \n\n characters, as it doesn't have any preceding teXt.
             } else {
+                console.log(`INSERTING: ${x}`)
                 isVeryFirstTextSnippet = false
                 alreadyInserted.push(x)
             }
@@ -142,10 +153,10 @@ module.exports = { splitText };
 
 // ------------------------------------------- TESTING -------------------------------------------
 
-// let testString = `randomstuffgo lol a b c d e f gaoosdoasihoaishdoaisdaoisdjaois h hhhhhh lol`
+let testString = `randomstuffgo lol a b c d e f gaoosdoasihoaishdoaisdaoisdjaois h hhhhhh lol`
 
-// const testArray = splitText(testString, 5)
-// const testJoined = testArray.join(' ')
+const testArray = splitText(testString, 5)
+const testJoined = testArray.join(' ')
 
-// console.log(testArray)
-// console.log(testJoined)
+console.log(testArray)
+console.log(testJoined)

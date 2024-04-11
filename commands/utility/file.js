@@ -165,10 +165,11 @@ module.exports = {
             const arrayOfText = splitText(data, 2000)
             
             // Sends the contents of the TXT file back as separate messages
-            for (const textSnippet of arrayOfText) {
+            for (let index = 0; index < arrayOfText.length; index++) {
+                const textSnippet = arrayOfText[index];
                 setTimeout(() => {
                     interaction.followUp({ content: `${textSnippet}` })
-                }, 1000);
+                }, index * 1000) // Rate limits the followUps to every 1 second
             }
 
             // Deletes the downloaded TXT file

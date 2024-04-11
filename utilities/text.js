@@ -54,9 +54,11 @@ function splitText(inputText, characterLimit) {
 
         // Determines if the strings in alreadyInserted[] need to be pushed to brokenUpTextWithinLimit[]
         // so that different words won't be stuck together, but rather split up, regardless of the limit.
-        if (isNewTextSnippet) {
+        if (isNewTextSnippet && whatWasX !== 'paragraph') {
             // If forEachTeXt has been passed a new textSnippet, it treats it as a paragraph by default.
             // This is because textSnippets is an array of string(s) divided along instances of '\n\n'.
+            // If the last teXt was a paragraph, this is ignored, so multiple paragraphs can be inserted
+            // into the same brokenUpTextWithinLimit[] instead of split up for no reason.
             pushInsertedTeXt()
             whatIsX = 'paragraph'
             whatWasX = whatIsX

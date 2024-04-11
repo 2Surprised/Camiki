@@ -136,20 +136,3 @@ function splitText(inputText, characterLimit) {
 }
 
 module.exports = { splitText };
-
-// ------------------------------------------- TESTING -------------------------------------------
-
-let testString = `Alright, let's do this again.
-
-I'll start by assuming that:
-
-- The number of players up to level 200 based on my previous calculations are correct. There are a total of 2,774 players with at least 200 levels, which sounds perfectly reasonable.
-- There are a total of 80 players above level 400.
-
-From level 200 to level 400, there are a total of 8 level milestones, level 225, 250, 275, 300, 325, 350, 375 and 400 itself. That gives us this new equation, where \`n\` is the percentage of players with the last level milestone as well as the next level milestone:`
-
-const testArray = splitText(testString, 50)
-const testJoined = testArray.join(' ')
-
-console.log(testArray)
-console.log(testJoined)

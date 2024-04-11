@@ -146,7 +146,7 @@ module.exports = {
 
             // Returns an error if the file is not a TXT file
             if (originalFormat !== 'txt') {
-                interaction.reply({ content: 'Sorry, the file must be a TXT file.', ephemeral: true })
+                interaction.followUp({ content: 'Sorry, the file must be a TXT file.', ephemeral: true })
                 return;
             }
 

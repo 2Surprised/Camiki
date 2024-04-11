@@ -1,5 +1,3 @@
-// TODO: EDGE CASES WITH SINGLE LETTER WORDS (TREATED AS CHARACTERS AND JOINED WITH PREVIOUS WORD)
-
 // The splitText() function returns an array containing whole or parts of the text inputted as
 // elements of the array. All elements in the returned array are strings that do not exceed the
 // character limit specified. Use cases for this function include splitting up text into multiple
@@ -38,11 +36,10 @@ function splitText(inputText, characterLimit) {
     function pushInsertedTeXt() {
         let toString = ''
         // Joins all alreadyInserted[] strings together
-        whatIsX === 'paragraph' ?
-        toString = alreadyInserted.join('\n\n') : // if teXt is a paragraph
-        whatIsX === 'word' ?
-        toString = alreadyInserted.join(' ') : // if teXt is a word
+        whatWasX === 'paragraph' ? toString = alreadyInserted.join('\n\n') : // if teXt is a paragraph
+        whatWasX === 'word' ? toString = alreadyInserted.join(' ') : // if teXt is a word
         toString = alreadyInserted.join('') // else teXt must be a character
+
         // Pushes all alreadyInserted[] strings to the final array as one string, if not empty
         if (toString) { brokenUpTextWithinLimit.push(toString) }
         // Resets all values used in processing
@@ -58,48 +55,39 @@ function splitText(inputText, characterLimit) {
         // Determines if the strings in alreadyInserted[] need to be pushed to brokenUpTextWithinLimit[]
         // so that different words won't be stuck together, but rather split up, regardless of the limit.
         if (isNewTextSnippet) {
-            console.log('\n\n\nNEW TEXT SNIPPET\n')
             // If forEachTeXt has been passed a new textSnippet, it treats it as a paragraph by default.
             // This is because textSnippets is an array of string(s) divided along instances of '\n\n'.
             pushInsertedTeXt()
             whatIsX = 'paragraph'
             whatWasX = whatIsX
-        } else if (whatIsX === 'character' && x.length !== 1) {
-            // If the teXt is presumed to be a character, but isn't 1 character long, then it must be a
-            // word, specifically, a new word that shouldn't be joined together with the characters before.
-            pushInsertedTeXt()
-            whatIsX = 'word'
-        } else if (whatWasX === 'word' && whatIsX === 'character') {
-            // If the teXt used to be a word, and now the teXt is characters, then those characters must
-            // belong to a new word that shouldn't be joined together with the word before.
+        } else if (whatIsX !== whatWasX) {
+            // If the current teXt is different from the previous teXt, that means that the current
+            // teXt belong to a new word that shouldn't be joined together with the word before.
             pushInsertedTeXt()
         }
-
-        console.log('\n')
-        console.log(`whatWasX: ${whatWasX}`)
-        console.log(`whatIsX: ${whatIsX}`)
-        console.log(`teXt: ${String.raw`${x}`}`)
 
         // REDUCE:
         // If a single teXt is already over the limit, this splits the teXt up into multiple parts.
         // It then calls forEachTeXt() on each of the parts, making sure all strings are processed.
         if (x.length > characterLimit) {
             if (whatIsX === 'paragraph') {
-                console.log('Reduced to words!')
                 // Must be a paragraph or sentence, reduces to words
                 const words = x.split(' ')
-                // Updates teXt types before the next teXt is processed
+                // Updates teXt types before the reduced teXt is processed
                 whatWasX = whatIsX
                 whatIsX = 'word'
                 for (const word of words) { forEachTeXt(word, false) }
+                // Updates teXt types after the reduced teXt is processed
+                whatIsX = 'paragraph'
             } else {
-                console.log('Reduced to characters!')
                 // Must be a word, reduces to characters
                 const characters = x.split('')
-                // Updates teXt types before the next teXt is processed
+                // Updates teXt types before the reduced teXt is processed
                 whatWasX = whatIsX
                 whatIsX = 'character'
                 for (const character of characters) { forEachTeXt(character, false) }
+                // Updates teXt types after the reduced teXt is processed
+                whatIsX = 'word'
             }
         }
 
@@ -108,7 +96,6 @@ function splitText(inputText, characterLimit) {
         // all the strings in alreadyInserted[] are pushed to brokenUpTextWithinLimit[], and the
         // current teXt will be passed into the forEachTeXt() function again to be processed properly.
         else if (x.length + lengthOfStringsAlreadyInserted > characterLimit) {
-            console.log('RESTARTING')
             // Pushes all currently stored strings, then resets all values used in processing
             pushInsertedTeXt()
             // Continues the processing of teXt
@@ -124,38 +111,44 @@ function splitText(inputText, characterLimit) {
             // If the last teXt was a paragraph, the current teXt must belong to a new textSnippet (paragraph).
             // Therefore, to give the paragraphs the necessary distancing, 2 \n\n characters have to be added.
             if (whatWasX === 'paragraph' && !isVeryFirstTextSnippet) {
-                console.log(`INSERTING: ${String.raw`\n\n${x}`}`)
                 alreadyInserted.push(`\n\n${x}`)
                 accountForWhitespace += 2 // Adds two to account for 2 \n\n characters
 
             // This runs if the textSnippet is the very first (i.e. very first string) to be handled, so
             // there shouldn't be 2 preceding \n\n characters, as it doesn't have any preceding teXt.
             } else {
-                console.log(`INSERTING: ${x}`)
                 isVeryFirstTextSnippet = false
                 alreadyInserted.push(x)
             }
 
+            // When joining strings in alreadyInserted[], whitespace between words have to be accounted for,
+            // as well as \n\n characters between paragraphs, and no whitespace when joining characters
+            whatIsX === 'word' ? accountForWhitespace += 1 :
+            whatIsX === 'paragraph' ? accountForWhitespace += 2 : 0
+
             // Handles logic related to accounting for whitespace, so the character limit isn't exceeded
-            lengthOfStringsAlreadyInserted += (x.length + accountForWhitespace + (
-                whatIsX === 'word' ? 1 : // If teXt is a word, adds one to account for whitespace between words
-                whatIsX === 'paragraph' ? 2 : 0 // If teXt is a paragraph, adds two to account for \n\n
-            ))
+            lengthOfStringsAlreadyInserted += x.length + accountForWhitespace
 
             // Updates whatWasX before the next teXt is processed
             whatWasX = whatIsX
         }
     }
-
 }
 
 module.exports = { splitText };
 
 // ------------------------------------------- TESTING -------------------------------------------
 
-let testString = `randomstuffgo lol a b c d e f gaoosdoasihoaishdoaisdaoisdjaois h hhhhhh lol`
+let testString = `Alright, let's do this again.
 
-const testArray = splitText(testString, 5)
+I'll start by assuming that:
+
+- The number of players up to level 200 based on my previous calculations are correct. There are a total of 2,774 players with at least 200 levels, which sounds perfectly reasonable.
+- There are a total of 80 players above level 400.
+
+From level 200 to level 400, there are a total of 8 level milestones, level 225, 250, 275, 300, 325, 350, 375 and 400 itself. That gives us this new equation, where \`n\` is the percentage of players with the last level milestone as well as the next level milestone:`
+
+const testArray = splitText(testString, 50)
 const testJoined = testArray.join(' ')
 
 console.log(testArray)

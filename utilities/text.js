@@ -111,11 +111,8 @@ function splitText(inputText, characterLimit) {
             let accountForWhitespace = 0
 
             // If the last teXt was a paragraph, the current teXt must belong to a new textSnippet (paragraph).
-            // Therefore, to give the paragraphs the necessary distancing, 2 \n\n characters have to be added.
             if (whatWasX === 'paragraph' && !isVeryFirstTextSnippet) {
-                alreadyInserted.push(`\n\n${x}`)
-                accountForWhitespace += 2 // Adds two to account for 2 \n\n characters
-
+                alreadyInserted.push(x)
             // This runs if the textSnippet is the very first (i.e. very first string) to be handled, so
             // there shouldn't be 2 preceding \n\n characters, as it doesn't have any preceding teXt.
             } else {

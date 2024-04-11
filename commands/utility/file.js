@@ -4,6 +4,7 @@ const fs = require('node:fs');
 const { spawn } = require('node:child_process');
 const Ffmpeg = require('@ffmpeg-installer/ffmpeg');
 const cpuLimit = require('cpulimit');
+const { splitText } = require('../../utilities/text.js')
 
 module.exports = {
 
@@ -23,6 +24,15 @@ module.exports = {
                 .setDescription('The format to convert the file to. (e.g. mp4)')
                 .setRequired(true),
             ),
+        )
+        .addSubcommand(command => command
+            .setName('text')
+            .setDescription('Split up the contents of a TXT file and send them as separate messages.')
+            .addAttachmentOption(attachment => attachment
+                .setName('text-file')
+                .setDescription('The TXT file you want to split up.')
+                .setRequired(true)
+            )
         ),
 
     async execute(interaction) {
@@ -121,6 +131,48 @@ module.exports = {
                 interaction.followUp(`${errorDefault} (${getTimeElapsed()}) ${errorAdvice}`);
                 fs.unlink(inputPath, (error) => { if (error) { throw error }; });
             };
+        } else if (subcommand === 'text') {
+            await interaction.deferReply()
+                .catch(error => console.error(error))
+
+            // Retrieves the URL of the file
+            const userAttachment = interaction.options.getAttachment('text-file')
+            const attachedURL = userAttachment.url
+            const originalFormat = userAttachment.name.split('.').slice(-1).join('').toLowerCase()
+            const temporaryName = Date.now()
+            const pathToStore = 'Related/TempFiles/'
+            const inputName = `${temporaryName}.${originalFormat}`
+            const inputPath = pathToStore + inputName
+
+            // Returns an error if the file is not a TXT file
+            if (originalFormat !== 'txt') {
+                interaction.reply({ content: 'Sorry, the file must be a TXT file.', ephemeral: true })
+                return;
+            }
+
+            // Downloads the attachment
+            const response = await fetch(attachedURL);
+            const buffer = await consumers.buffer(response.body);
+            fs.writeFileSync(inputPath, buffer);
+            let data = ''
+
+            // Parses the TXT file
+            try {
+                data = fs.readFileSync(`${inputPath}`, 'utf8')
+            } catch (error) {
+                console.error(error)
+            }
+            const arrayOfText = splitText(data, 2000)
+            
+            // Sends the contents of the TXT file back as separate messages
+            setTimeout(() => {
+                for (const textSnippet of arrayOfText) {
+                    interaction.followUp({ content: `${textSnippet}` })
+                }
+            }, 1000)
+
+            // Deletes the downloaded TXT file
+            fs.unlink(inputPath, (error) => { if (error) { throw error } })
         };
 
     },

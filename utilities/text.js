@@ -18,8 +18,7 @@ function splitText(inputText, characterLimit) {
     const alreadyInserted = [] // Strings that will be added to the final result later on
     let lengthOfStringsAlreadyInserted = 0 // Length of all the strings in alreadyInserted[]
     let whatIsX = '' // Whether the current teXt is a paragraph/sentence, word, or character
-    let whatWasX = '' // Whether the last teXt was a paragraph/sentence, word, or character
-    let isVeryFirstTextSnippet = true // Whether this is the very first textSnippet to be processed
+    let whatWasX = '' // Whether the last teXt was a paragraph/sentence, word, or character=
 
     // This will populate brokenUpTextWithinLimit[] with strings, except for the final alreadyInserted[]
     for (const textSnippet of textSnippets) { forEachTeXt(textSnippet, true) }
@@ -108,17 +107,8 @@ function splitText(inputText, characterLimit) {
         // If a teXt doesn't surpass the limit when added with all the strings already inserted,
         // the teXt is inserted along with the rest of the strings in alreadyInserted[].
         else {
+            alreadyInserted.push(x)
             let accountForWhitespace = 0
-
-            // If the last teXt was a paragraph, the current teXt must belong to a new textSnippet (paragraph).
-            if (whatWasX === 'paragraph' && !isVeryFirstTextSnippet) {
-                alreadyInserted.push(x)
-            // This runs if the textSnippet is the very first (i.e. very first string) to be handled, so
-            // there shouldn't be 2 preceding \n\n characters, as it doesn't have any preceding teXt.
-            } else {
-                isVeryFirstTextSnippet = false
-                alreadyInserted.push(x)
-            }
 
             // When joining strings in alreadyInserted[], whitespace between words have to be accounted for,
             // as well as \n\n characters between paragraphs, and no whitespace when joining characters

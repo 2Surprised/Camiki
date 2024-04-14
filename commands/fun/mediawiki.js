@@ -17,7 +17,7 @@ module.exports = {
         const subcommand = interaction.options.getSubcommand()
 
         if (subcommand === 'random') {
-            interaction.deferReply()
+            await interaction.deferReply()
                 .catch(error => console.log(error))
 
             wtf.random().then((doc) => {

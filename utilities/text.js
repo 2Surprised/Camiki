@@ -18,7 +18,7 @@ function splitText(inputText, characterLimit) {
     const alreadyInserted = [] // Strings that will be added to the final result later on
     let lengthOfStringsAlreadyInserted = 0 // Length of all the strings in alreadyInserted[]
     let whatIsX = '' // Whether the current teXt is a paragraph/sentence, word, or character
-    let whatWasX = '' // Whether the last teXt was a paragraph/sentence, word, or character=
+    let whatWasX = '' // Whether the last teXt was a paragraph/sentence, word, or character
 
     // This will populate brokenUpTextWithinLimit[] with strings, except for the final alreadyInserted[]
     for (const textSnippet of textSnippets) { forEachTeXt(textSnippet, true) }

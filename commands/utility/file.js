@@ -4,7 +4,8 @@ const fs = require('node:fs');
 const { spawn } = require('node:child_process');
 const Ffmpeg = require('@ffmpeg-installer/ffmpeg');
 const cpuLimit = require('cpulimit');
-const { splitText } = require('../../utilities/text.js')
+const { splitText } = require('../../utilities/text.js');
+const { stringify } = require('node:querystring');
 
 module.exports = {
 
@@ -32,6 +33,10 @@ module.exports = {
                 .setName('text-file')
                 .setDescription('The TXT file you want to split up.')
                 .setRequired(true)
+            )
+            .addStringOption(string => string
+                .setName('programming-language')
+                .setDescription('Whether or not to display as a programming language.')
             )
         ),
 
@@ -135,6 +140,9 @@ module.exports = {
             await interaction.deferReply()
                 .catch(error => console.error(error))
 
+            // Whether to display the split up TXT file as separate code blocks
+            const programmingLanguage = interaction.options.getString('programming-language')
+
             // Retrieves the URL of the file
             const userAttachment = interaction.options.getAttachment('text-file')
             const attachedURL = userAttachment.url
@@ -144,9 +152,11 @@ module.exports = {
             const inputName = `${temporaryName}.${originalFormat}`
             const inputPath = pathToStore + inputName
 
-            // Returns an error if the file is not a TXT file
             if (originalFormat !== 'txt') {
                 interaction.followUp({ content: 'Sorry, the file must be a TXT file.', ephemeral: true })
+                return;
+            } else if (programmingLanguage && typeof programmingLanguage !== 'string') {
+                interaction.followUp({ content: 'Sorry, the programming language inputted is not valid.', ephemeral: true })
                 return;
             }
 
@@ -161,12 +171,17 @@ module.exports = {
                 data = fs.readFileSync(`${inputPath}`, 'utf8')
             } catch (error) {
                 console.error(error)
+                interaction.followUp({ content: 'Sorry, the parsing has failed. Try again!', ephemeral: true })
+                return;
             }
-            const arrayOfText = splitText(data, 2000)
+            let characterLimit = 2000
+            if (programmingLanguage) { characterLimit -= 6 + programmingLanguage.length }
+            const arrayOfText = splitText(data, characterLimit)
             
             // Sends the contents of the TXT file back as separate messages
             for (let index = 0; index < arrayOfText.length; index++) {
-                const textSnippet = arrayOfText[index];
+                let textSnippet = arrayOfText[index];
+                if (programmingLanguage) { textSnippet = `\`\`\`${programmingLanguage}\n${textSnippet}\`\`\`` }
                 setTimeout(() => {
                     interaction.followUp({ content: `${textSnippet}` })
                 }, index * 1000) // Rate limits the followUps to every 1 second

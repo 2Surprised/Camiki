@@ -13,6 +13,8 @@ module.exports = {
 
     async execute(interaction) {
 
+        interaction.deferReply()
+
         let fetchURL = `https://api.nasa.gov/planetary/apod?api_key=${NASA_API_KEY}`
         const specifiedDate = interaction.options.getString('date');
         if (specifiedDate) {
@@ -52,20 +54,20 @@ module.exports = {
                     )
                     .setImage(url);
 
-                    interaction.reply({ embeds: [apodEmbed] });
+                    interaction.followUp({ embeds: [apodEmbed] });
 
                 } else if (mediaType === 'video') {
                     
                     // Embeds do not support the display of videos
-                    interaction.reply({ content: `**[${title}](${url})**:\n\n${explanation}\n\nCopyright: ${copyright}\nDate: ${date}` });
+                    interaction.followUp({ content: `**[${title}](${url})**:\n\n${explanation}\n\nCopyright: ${copyright}\nDate: ${date}` });
 
                 } else {
-                    interaction.reply({ content: 'Sorry, the media format of this APOD is not supported. Please contact <@871039576247005185> immediately.' });
+                    interaction.followUp({ content: 'Sorry, the media format of this APOD is not supported. Please contact <@871039576247005185> immediately.' });
                 }
             })
             .catch(error => {
                 console.error(error);
-                interaction.reply({ content: 'Sorry, the API did not return a valid response. Try again!\n\nIf you are passing in a date argument, make sure it is formatted as YYYY-MM-DD, for example, `1995-06-16`, which is when the first APOD was posted.', ephemeral: true });
+                interaction.followUp({ content: 'Sorry, the API did not return a valid response. Try again!\n\nIf you are passing in a date argument, make sure it is formatted as YYYY-MM-DD, for example, `1995-06-16`, which is when the first APOD was posted.', ephemeral: true });
             });
 
     },

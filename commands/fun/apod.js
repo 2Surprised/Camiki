@@ -13,7 +13,7 @@ module.exports = {
 
     async execute(interaction) {
 
-        interaction.deferReply()
+        await interaction.deferReply()
 
         let fetchURL = `https://api.nasa.gov/planetary/apod?api_key=${NASA_API_KEY}`
         const specifiedDate = interaction.options.getString('date');

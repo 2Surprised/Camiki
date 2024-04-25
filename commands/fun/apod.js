@@ -23,7 +23,7 @@ module.exports = {
 
         fetch(fetchURL)
             .then(response => {
-                if (response.code === 404) {
+                if (response.status === 404) {
                     throw new Error('No data available.')
                 } else if (!response.ok) {
                     throw new Error('Invalid response.')
@@ -68,8 +68,7 @@ module.exports = {
                 }
             })
             .catch(error => {
-                console.error(error);
-                if (error === 'No data available.') {
+                if (error.message === 'No data available.') {
                     interaction.followUp({ content: 'Sorry, there was no APOD on this day.' });
                 } else {
                     interaction.followUp({ content: 'Sorry, the API did not return a valid response. Try again!\n\nIf you are passing in a date argument, make sure it is formatted as YYYY-MM-DD, for example, `1995-06-16`, which is when the first APOD was posted.', ephemeral: true });

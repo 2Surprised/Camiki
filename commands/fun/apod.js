@@ -71,6 +71,7 @@ module.exports = {
                 if (error.message === 'No data available.') {
                     interaction.followUp({ content: 'Sorry, there was no APOD on this day.' });
                 } else {
+                    console.error(error)
                     interaction.followUp({ content: 'Sorry, the API did not return a valid response. Try again!\n\nIf you are passing in a date argument, make sure it is formatted as YYYY-MM-DD, for example, `1995-06-16`, which is when the first APOD was posted.', ephemeral: true });
                 }
             });

@@ -13,7 +13,7 @@ module.exports = {
 
     async execute(interaction) {
 
-        interaction.deferReply()
+        await interaction.deferReply()
 
         let fetchURL = `https://api.nasa.gov/planetary/apod?api_key=${NASA_API_KEY}`
         const specifiedDate = interaction.options.getString('date');
@@ -23,7 +23,9 @@ module.exports = {
 
         fetch(fetchURL)
             .then(response => {
-                if (!response.ok) {
+                if (response.status === 404) {
+                    throw new Error('No data available.')
+                } else if (!response.ok) {
                     throw new Error('Invalid response.')
                 };
                 return response.json();
@@ -66,8 +68,12 @@ module.exports = {
                 }
             })
             .catch(error => {
-                console.error(error);
-                interaction.followUp({ content: 'Sorry, the API did not return a valid response. Try again!\n\nIf you are passing in a date argument, make sure it is formatted as YYYY-MM-DD, for example, `1995-06-16`, which is when the first APOD was posted.', ephemeral: true });
+                if (error.message === 'No data available.') {
+                    interaction.followUp({ content: 'Sorry, there was no APOD on this day.' });
+                } else {
+                    console.error(error)
+                    interaction.followUp({ content: 'Sorry, the API did not return a valid response. Try again!\n\nIf you are passing in a date argument, make sure it is formatted as YYYY-MM-DD, for example, `1995-06-16`, which is when the first APOD was posted.', ephemeral: true });
+                }
             });
 
     },

@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, EmbedBuilder, IntegrationApplication } = require('discord.js');
-const { OWNER_ID, SOLAR_PANEL_TOKEN, SOLAR_SERVER_ID } = require('../../config.json');
+const { OWNER_ID, PTERO_PANEL_TOKEN, PTERO_SERVER_ID } = require('../../config.json');
 const { exec } = require('node:child_process');
 const hostPanel = 'https://panel.solarhosting.cc/'
 
@@ -31,8 +31,8 @@ module.exports = {
             let utilization;
 
             // Gets basic server information
-            await fetch(`${hostPanel}/api/client/servers/${SOLAR_SERVER_ID}`, {
-                headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${SOLAR_PANEL_TOKEN}` }
+            await fetch(`${hostPanel}/api/client/servers/${PTERO_SERVER_ID}`, {
+                headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_PANEL_TOKEN}` }
             })
                 .then(response => response.json())
                 .then(result => attributes = result.attributes)
@@ -43,8 +43,8 @@ module.exports = {
                 })
 
             // Gets resource usage
-            await fetch(`${hostPanel}/api/client/servers/${SOLAR_SERVER_ID}/resources`, {
-                headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${SOLAR_PANEL_TOKEN}` }
+            await fetch(`${hostPanel}/api/client/servers/${PTERO_SERVER_ID}/resources`, {
+                headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${PTERO_PANEL_TOKEN}` }
             })
                 .then(response => response.json())
                 .then(result => utilization = result.attributes.resources)
@@ -117,10 +117,10 @@ module.exports = {
             await interaction.editReply('Restarting Camiki...');
 
             // Fetch API doesn't work for some reason (400), cURL works though
-            exec(`curl ${hostPanel}/api/client/servers/${SOLAR_SERVER_ID}/power \
+            exec(`curl ${hostPanel}/api/client/servers/${PTERO_SERVER_ID}/power \
                 -H 'Accept: application/json' \
                 -H 'Content-Type: application/json' \
-                -H 'Authorization: Bearer ${SOLAR_PANEL_TOKEN}' \
+                -H 'Authorization: Bearer ${PTERO_PANEL_TOKEN}' \
                 -X POST \
                 -d '{
                 "signal": "restart"

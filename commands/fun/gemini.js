@@ -19,10 +19,9 @@ module.exports = {
 
             interaction.deferReply();
 
-            const model = genAI.getGenerativeModel({ model: "gemini-pro"});
-            const chat = model.startChat();
-            const message = interaction.options.getString('prompt');
-            const result = await chat.sendMessage(message);
+            const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
+            const prompt = interaction.options.getString('prompt');
+            const result = await model.generateContent(prompt);
             const response = await result.response;
             const text = response.text();
 

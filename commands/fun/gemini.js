@@ -23,19 +23,26 @@ module.exports = {
             const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
             const prompt = interaction.options.getString('prompt');
             const result = await model.generateContent(prompt);
-            const response = await result.response;
+            const response = result.response;
             const text = response.text();
+            const arrayOfText = splitText(text, 4096);
 
-            const embed = new EmbedBuilder()
+            for (let index = 0; index < arrayOfText.length; index++) {
+                const textSnippet = arrayOfText[index];
+
+                const embed = new EmbedBuilder()
                 .setAuthor({
                     name : 'Camiki',
                     iconURL: 'https://cdn.discordapp.com/attachments/1200510427306676264/1212693699675557908/image.png'
                 })
                 .setColor('#ff57f6')
-                .setDescription(`${text}`)
+                .setDescription(`${textSnippet}`)
                 .setFooter({ text: 'Powered by Gemini. Have a nice day!' });
-            
-            interaction.editReply({ embeds: [embed] });
+
+                setTimeout(() => {
+                    interaction.followUp({ embeds: [embed] })
+                }, index * 1000) // Rate limits the followUps to every 1 second
+            }
 
         } catch (error) {
             console.error(error);

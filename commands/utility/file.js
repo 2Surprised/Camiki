@@ -12,6 +12,8 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('file')
         .setDescription('Commands related to files.')
+        .setIntegrationTypes(0, 1)
+        .setContexts(0, 1, 2)
         .addSubcommand(command => command
             .setName('convert')
             .setDescription('Convert a file to another format.')

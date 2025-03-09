@@ -8,6 +8,8 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('bot')
         .setDescription('PRIVATE: Important Camiki commands.')
+        .setIntegrationTypes(0, 1)
+        .setContexts(0, 1, 2)
         .addSubcommand(subcommand => subcommand
             .setName('info')
             .setDescription('PRIVATE: Retrieve server information.')

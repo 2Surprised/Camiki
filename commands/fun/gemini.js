@@ -9,6 +9,8 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('gemini')
         .setDescription('Prompt Gemini from the comfort of Discord!')
+        .setIntegrationTypes(0, 1)
+        .setContexts(0, 1, 2)
         .addStringOption(string => string
             .setName('prompt')
             .setDescription('The prompt you wish to use.')

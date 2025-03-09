@@ -25,7 +25,9 @@ module.exports = {
 
     data: new SlashCommandBuilder()
         .setName('insight')
-        .setDescription('Get an insightful quote.'),
+        .setDescription('Get an insightful quote.')
+        .setIntegrationTypes(0, 1)
+        .setContexts(0, 1, 2),
 
     async execute(interaction) {
 

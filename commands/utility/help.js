@@ -16,7 +16,9 @@ module.exports = {
 
     data: new SlashCommandBuilder()
         .setName('help')
-        .setDescription('Find helpful information regarding Camiki.'),
+        .setDescription('Find helpful information regarding Camiki.')
+        .setIntegrationTypes(0, 1)
+        .setContexts(0, 1, 2),
 
     async execute(interaction) {
 

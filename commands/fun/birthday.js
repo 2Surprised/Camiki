@@ -13,6 +13,8 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('birthday')
         .setDescription('Wish someone a happy birthday! Powered by GIPHY.')
+        .setIntegrationTypes(0, 1)
+        .setContexts(0, 1, 2)
         .addUserOption(user => user
             .setName('user')
             .setDescription('The lucky birthday person!')

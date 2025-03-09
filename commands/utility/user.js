@@ -5,6 +5,8 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('user')
         .setDescription('Represents a user on Discord.')
+        .setIntegrationTypes(0, 1)
+        .setContexts(0, 1, 2)
         .addSubcommand(command => command
             .setName('info')
             .setDescription('Display information about a user.')

@@ -6,6 +6,8 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('apod')
         .setDescription('Fetch the latest Astronomy Picture of the Day (APOD).')
+        .setIntegrationTypes(0, 1)
+        .setContexts(0, 1, 2)
         .addStringOption(string => string
             .setName('date')
             .setDescription('Fetch an APOD from a specific date (YYYY-MM-DD). The earliest APOD is dated 1995-06-16.')

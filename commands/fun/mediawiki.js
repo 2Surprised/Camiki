@@ -8,6 +8,8 @@ module.exports = {
     data: new SlashCommandBuilder()
         .setName('mediawiki')
         .setDescription('Commands related to MediaWiki.')
+        .setIntegrationTypes(0, 1)
+        .setContexts(0, 1, 2)
         .addSubcommand(subcommand => subcommand
             .setName('random')
             .setDescription('Retrieve a random Wikipedia article.')

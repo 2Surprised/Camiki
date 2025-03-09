@@ -14,6 +14,8 @@ module.exports = {
     data: new SlashCommandBuilder()
     .setName('role')
     .setDescription('Commands related to roles.')
+    .setIntegrationTypes(0, 1)
+    .setContexts(0, 1, 2)
     .addSubcommandGroup(commandGroup => commandGroup
         .setName('color')
         .setDescription('Commands related to role colors.')

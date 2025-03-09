@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { GEMINI_API_KEY } = require('../../config.json');
+const { splitText } = require('../../utilities/text.js')
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
 module.exports = {

@@ -12,7 +12,6 @@
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@google/generative-ai": "^0.3.1",
-    "cpulimit": "^1.1.4",
     "discord.js": "^14.18.0",
     "jimp": "^0.22.12",
     "nodemon": "^3.1.0",

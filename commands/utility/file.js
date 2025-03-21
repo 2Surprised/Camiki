@@ -3,7 +3,7 @@ const consumers = require('stream/consumers');
 const fs = require('node:fs');
 const { spawn } = require('node:child_process');
 const Ffmpeg = require('@ffmpeg-installer/ffmpeg');
-const cpuLimit = require('cpulimit');
+// const cpuLimit = require('cpulimit');
 const { splitText } = require('../../utilities/text.js');
 const { stringify } = require('node:querystring');
 
@@ -67,10 +67,10 @@ module.exports = {
             const inputPath = pathToStore + inputName;
             const outputPath = pathToStore + outputName;
 
-            const cpuLimitOptions = {
-                limit: 20, // CPU usage percentage
-                includeChildren: true
-            };
+            // const cpuLimitOptions = {
+            //     limit: 20, // CPU usage percentage
+            //     includeChildren: true
+            // };
 
             try {
 
@@ -96,13 +96,13 @@ module.exports = {
                 const ffmpegProcess = spawn(Ffmpeg.path, ['-i', inputName, arguments, outputName], { cwd: pathToStore, shell: true });
                 
                 // Limits the total CPU usage of the child process
-                cpuLimitOptions.pid = ffmpegProcess.pid;
-                cpuLimit.createProcessFamily(cpuLimitOptions, (error, processFamily) => {
-                    if (error) { throw error };
-                    cpuLimit.limit(processFamily, cpuLimitOptions, (error) => {
-                        if (error) { throw error };
-                    });
-                });
+                // cpuLimitOptions.pid = ffmpegProcess.pid;
+                // cpuLimit.createProcessFamily(cpuLimitOptions, (error, processFamily) => {
+                //     if (error) { throw error };
+                //     cpuLimit.limit(processFamily, cpuLimitOptions, (error) => {
+                //         if (error) { throw error };
+                //     });
+                // });
 
                 ffmpegProcess.stderr.once('data', data => {
                     currentTime = Date.now();

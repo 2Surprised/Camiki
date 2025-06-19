@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, EmbedBuilder, AttachmentBuilder } = require('discord.js');
+const { SlashCommandBuilder, EmbedBuilder, AttachmentBuilder, MessageFlags } = require('discord.js');
 const Jimp = require('jimp');
 
 const embed = new EmbedBuilder()
@@ -15,7 +15,7 @@ module.exports = {
     .setName('role')
     .setDescription('Commands related to roles.')
     .setIntegrationTypes(0, 1)
-    .setContexts(0, 1, 2)
+    .setContexts(0)
     .addSubcommandGroup(commandGroup => commandGroup
         .setName('color')
         .setDescription('Commands related to role colors.')
@@ -39,6 +39,8 @@ module.exports = {
         if (subcommandGroup === 'color') {
             if (subcommand === 'view') {
 
+                await interaction.deferReply()
+
                 new Jimp(200, 200, interaction.member.displayHexColor, (error, image) => {
                     if (error) throw error;
                     image.getBuffer(Jimp.MIME_PNG, (error, imageFile) => {
@@ -49,18 +51,30 @@ module.exports = {
                         .setName('image.png')
                         const replyEmbed = embed
                         .setTitle('Current Role Color')
-                        .setDescription(`HEX color value: \`${interaction.member.displayHexColor}\``)
+                        .setDescription(`Hex color value: \`${interaction.member.displayHexColor}\``)
                         .setThumbnail('attachment://image.png')
-                        interaction.reply({ embeds: [replyEmbed], files: [roleColorImage] })
+                        interaction.followUp({ embeds: [replyEmbed], files: [roleColorImage] })
 
                     });
                 });
 
             } else if (subcommand === 'change') {
 
+                await interaction.deferReply({ flags: MessageFlags.Ephemeral })
+
+                const chosenColor = interaction.options.getString('color')
+                if (chosenColor === '000000' || chosenColor === '#000000') {
+                    interaction.followUp({ content: "You cannot select this color." })
+                    return;
+                }
+
                 interaction.member.roles.color.setColor(`${interaction.options.getString('color')}`)
-                .catch(console.error);
-                interaction.reply({ content: "Your role color has been successfully changed!" });
+                .then(() => {
+                    interaction.followUp({ content: "Your role color has been successfully changed!" })
+                })
+                .catch((error) => {
+                    interaction.followUp({ content: "An error occurred during execution. The provided hex value may not be valid." })
+                })
 
             };
         };

@@ -23,6 +23,8 @@ module.exports = {
 
     async execute(interaction) {
 
+        await interaction.deferReply()
+
         const executingUser = interaction.user;
         const targetUser = interaction.options.getUser('user');
         const numberOfGifs = 25;
@@ -40,15 +42,15 @@ module.exports = {
                 const url = randomGif.url;
 
                 if (executingUser.id === targetUser.id) {
-                    interaction.reply({ content: `${executingUser} is wishing themselves a [happy birthday](${url} )!` });
+                    interaction.followUp({ content: `${executingUser} is wishing themselves a [happy birthday](${url} )!` });
                 } else {
-                    interaction.reply({ content: `${executingUser} is wishing you a [happy birthday](${url} ), <@${targetUser.id}>!` });
+                    interaction.followUp({ content: `${executingUser} is wishing you a [happy birthday](${url} ), <@${targetUser.id}>!` });
                 }
 
             })
             .catch(error => {
                 console.error(error)
-                interaction.reply({ content: `Sorry, the API limit has been reached... Still, happy birthday <@${targetUser}>!` });
+                interaction.followUp({ content: `Sorry, the API limit has been reached... Still, happy birthday <@${targetUser}>!` });
             });
 
     }

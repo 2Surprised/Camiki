@@ -34,6 +34,13 @@ module.exports = {
         
         if (subcommand === 'info') {
 
+            await interaction.deferReply()
+
+            if (!interaction.guild) {
+                interaction.followUp({ content: 'You cannot run this command outside of a server.' })
+                return;
+            }
+
             const targetUser = interaction.options.getUser('user') ?? interaction.member.user;
             let targetMember = interaction.guild.members.fetch(`${targetUser.id}`)
                 .then(member => targetMember = member);
@@ -42,7 +49,7 @@ module.exports = {
                 .then(user => {
 
                     const userRoles = targetMember.roles.cache
-                        .filter(roles => roles.id !== '1143173657473077338')
+                        // .filter(roles => roles.id !== '1143173657473077338')
                         .sort((a, b) => b.rawPosition - a.rawPosition);
                     let userRolesText = [];
                     let numberOfRoles = 0;
@@ -96,7 +103,7 @@ module.exports = {
                         { name: `Permissions (${numberOfPermissions})`, value: `${userPermissionsText}` }
                     );
 
-                    interaction.reply({ embeds: [embed] });
+                    interaction.followUp({ embeds: [embed] });
 
                 });
 
@@ -119,7 +126,7 @@ module.exports = {
                     .setTitle('User Avatar')
                     .setImage(`${user.avatarURL()}?size=4096`);
 
-                    interaction.reply({ embeds: [embed] });
+                    interaction.followUp({ embeds: [embed] });
 
                 });
 

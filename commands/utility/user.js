@@ -31,10 +31,10 @@ module.exports = {
     async execute(interaction) {
         const subcommandGroup = interaction.options.getSubcommandGroup();
         const subcommand = interaction.options.getSubcommand();
+
+        await interaction.deferReply()
         
         if (subcommand === 'info') {
-
-            await interaction.deferReply()
 
             if (!interaction.guild) {
                 interaction.followUp({ content: 'You cannot run this command outside of a server.' })

@@ -9,6 +9,7 @@ const foldersPath = path.join(__dirname, 'commands');
 const commandFolders = fs.readdirSync(foldersPath);
 
 for (const folder of commandFolders) {
+	if (folder == 'sunsetted') continue;
 	// Grab all the command files from the commands directory you created earlier
 	const commandsPath = path.join(foldersPath, folder);
 	const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
@@ -27,9 +28,14 @@ for (const folder of commandFolders) {
 // Construct and prepare an instance of the REST module
 const rest = new REST().setToken(TOKEN);
 
-// To delete all guild commands. Comment out command deploy/refresh code when executing
+// To delete all guild commands (Comment out deploy code when executing):
 // rest.put(Routes.applicationGuildCommands(CLIENT_ID, GUILD_ID), { body: [] })
 // 	.then(() => console.log('Successfully deleted all guild commands.'))
+// 	.catch(console.error);
+
+// To delete all global commands (Comment out deploy code when executing):
+// rest.put(Routes.applicationCommands(CLIENT_ID), { body: [] })
+// 	.then(() => console.log('Successfully deleted all application commands.'))
 // 	.catch(console.error);
 
 // and deploy your commands!

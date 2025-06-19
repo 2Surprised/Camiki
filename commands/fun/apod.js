@@ -51,7 +51,7 @@ module.exports = {
                     .setColor('#ff57f6')
                     .setFooter({ text: 'Data courtesy of the NASA API. Have a nice day!' })
                     .setTitle(title)
-                    .setDescription(`${explanation}`)
+                    .setDescription(`(If there is no image, then this is a known bug with Discord.) ${explanation}`)
                     .addFields(
                         { name: 'Copyright', value: `${copyright}`, inline: true },
                         { name: 'Date', value: `${date}`, inline: true },
@@ -66,7 +66,7 @@ module.exports = {
                     interaction.followUp({ content: `**[${title}](${url})**:\n\n${explanation}\n\nCopyright: ${copyright}\nDate: ${date}` });
 
                 } else {
-                    interaction.followUp({ content: 'Sorry, the media format of this APOD is not supported. Please contact <@871039576247005185> immediately.' });
+                    interaction.followUp({ content: 'Sorry, the media format of this APOD is not supported. Please contact <@871039576247005185>.' });
                 }
             })
             .catch(error => {

@@ -23,7 +23,7 @@ module.exports = {
 
     async execute(interaction) {
 
-        const executingUser = interaction.member.user;
+        const executingUser = interaction.user;
         const targetUser = interaction.options.getUser('user');
         const numberOfGifs = 25;
 

@@ -29,7 +29,7 @@ module.exports = {
             files: Array.from(attachments.values())
         })
         .then(message => {
-            message.edit({ content: `Drawn by <@${user.id}>, received on <t:${timestamp}:f>.\n${messageUrl}` })
+            message.edit({ content: `Created by <@${user.id}>, received on <t:${timestamp}:f>.\n${messageUrl}` })
         })
 
         interaction.followUp({ content: 'The message has been posted to the fanart channel!' })

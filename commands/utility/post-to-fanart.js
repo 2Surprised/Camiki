@@ -18,7 +18,7 @@ module.exports = {
         }
 
         const message = interaction.targetMessage
-        const timestamp = message.createdTimestamp
+        const timestamp = (Number(message.createdTimestamp) / 1000).toString()
         const messageUrl = message.url
         const attachments = message.attachments
         const user = message.author

@@ -5,7 +5,7 @@ const fanartChannelId = '1144576274371711076'
 module.exports = {
 
     data: new ContextMenuCommandBuilder()
-        .setName('Post to #fanart')
+        .setName('Post to #fanart (Creation)')
         .setType(ApplicationCommandType.Message)
         .setContexts(InteractionContextType.Guild, InteractionContextType.PrivateChannel, InteractionContextType.BotDM)
         .setIntegrationTypes(ApplicationIntegrationType.GuildInstall, ApplicationIntegrationType.UserInstall),
@@ -25,7 +25,7 @@ module.exports = {
         const fanartChannel = await interaction.client.channels.fetch(fanartChannelId)
 
         await fanartChannel.send({
-            content: `Drawn by ${user.displayName}, received on <t:${timestamp}:f>.\n${messageUrl}`,
+            content: `Created by ${user.displayName}, received on <t:${timestamp}:f>.\n${messageUrl}`,
             files: Array.from(attachments.values())
         })
         .then(message => {

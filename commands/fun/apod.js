@@ -51,7 +51,7 @@ module.exports = {
                     .setColor('#ff57f6')
                     .setFooter({ text: 'Data courtesy of the NASA API. Have a nice day!' })
                     .setTitle(title)
-                    .setDescription(`(If there is no image, then this is a known bug with Discord.) ${explanation}`)
+                    .setDescription(`${explanation}`)
                     .addFields(
                         { name: 'Copyright', value: `${copyright}`, inline: true },
                         { name: 'Date', value: `${date}`, inline: true },

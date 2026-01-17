@@ -2,7 +2,7 @@ const { SlashCommandBuilder, AttachmentBuilder } = require('discord.js');
 const consumers = require('stream/consumers');
 const fs = require('node:fs');
 const { spawn } = require('node:child_process');
-const Ffmpeg = require('@ffmpeg-installer/ffmpeg');
+// const Ffmpeg = require('@ffmpeg-installer/ffmpeg');
 // const cpuLimit = require('cpulimit');
 const { splitText } = require('../../utilities/text.js');
 const { stringify } = require('node:querystring');
@@ -85,11 +85,11 @@ module.exports = {
                 fs.writeFileSync(inputPath, buffer);
     
                 // ffmpeg causing TONS of duplicated frames for videos, this deletes them if input is a video
-                let arguments = '';
+                // let arguments = '';
                 if (originalMediaType === 'video') {
                     // vsync has been deprecated
-                    // arguments = '-vf mpdecimate -fps_mode vfr';
-                    arguments = '-vf mpdecimate -vsync vfr';
+                    // // arguments = '-vf mpdecimate -fps_mode vfr';
+                    // arguments = '-vf mpdecimate -vsync vfr';
                 };
     
                 // Spawns a child process that runs the ffmpeg command in a shell environment

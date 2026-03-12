@@ -1,8 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require('discord.js');
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { GoogleGenAI } = require("@google/genai");
 const { GEMINI_API_KEY } = require('../../config.json');
 const { splitText } = require('../../utilities/text.js')
-const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
 module.exports = {
 
@@ -19,15 +18,23 @@ module.exports = {
 
     async execute(interaction) {
         try {
-
             interaction.deferReply();
 
-            const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+            const ai = new GoogleGenAI({apiKey: GEMINI_API_KEY});
+            const groundingTool = {
+                googleSearch: {}
+            };
+            const config = {
+                tools: [groundingTool],
+            };
             const prompt = interaction.options.getString('prompt');
-            const result = await model.generateContent(prompt);
-            const response = result.response;
-            const text = response.text();
-            const arrayOfText = splitText(text, 4096);
+            const result = await ai.models.generateContent({
+                model: 'gemini-2.5-flash',
+                contents: prompt,
+                config
+            });
+            const response = result.text;
+            const arrayOfText = splitText(response, 4096);
 
             for (let index = 0; index < arrayOfText.length; index++) {
                 const textSnippet = arrayOfText[index];
